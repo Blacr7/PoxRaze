@@ -1,3 +1,11 @@
+## Features to come
+Champion and ability load.
+link abilities, mechanics, and conditions between champs, relics, and spells.
+
+
+
+
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/Blacr7/PoxRaze/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
