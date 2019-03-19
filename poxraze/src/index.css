@@ -1,0 +1,20 @@
+table {
+  width:98%;
+ }
+ th {
+  text-align:left;
+ }
+ td {
+  vertical-align:top;
+ }
+ #details {
+  display:none;
+  position:fixed;
+  background: white;
+  border: 2px solid;
+  top: calc(50% - 200px);
+  left: calc(50% - 200px);
+  width:500px;
+  padding:20px;
+ }
+ 

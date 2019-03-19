@@ -7,6 +7,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
 ## Features to come
 Champion and ability load.
 link abilities, mechanics, and conditions between champs, relics, and spells.
+<<<<<<< HEAD
 >>>>>>> parent of 8a1f933... Update README.md
 
 ## Table of Contents
@@ -428,6 +429,8 @@ We suggest that you stick to using default imports and exports when a module onl
 Named exports are useful for utility modules that export several functions. A module may have at most one default export and as many named exports as you like.
 
 Learn more about ES6 modules:
+=======
+>>>>>>> parent of 8a1f933... Update README.md
 
 * [When to use the curly braces?](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281)
 * [Exploring ES6: Modules](http://exploringjs.com/es6/ch_modules.html)
