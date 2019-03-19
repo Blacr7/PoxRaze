@@ -1,3 +1,8 @@
+## Changes to come.
+
+1. Champion and ability load.
+2. link abilities, mechanics, and conditions between champs, relics, and spells.
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
