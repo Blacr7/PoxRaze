@@ -1,8 +1,9 @@
 {
-  "homepage": "https://blacr7.github.io/PoxRaze/",
+  
   "name": "poxraze",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://blacr7.github.io/PoxRaze/",
   "dependencies": {
     "@types/react": "^16.4.13",
     "react": "^16.4.2",
