@@ -1,4 +1,4 @@
--## Changes to come.
+## Changes to come.
 
 1. Champion and ability load.
 2. link abilities, mechanics, and conditions between champs, relics, and spells.
