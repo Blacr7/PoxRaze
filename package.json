@@ -2,7 +2,7 @@
   "name": "poxraze",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://blacr7.github.io/PoxRaze",
+  "homepage": "https://blacr7.github.io",
   "dependencies": {
     "@types/react": "^16.4.13",
     "ajv": "^6.10.0",
