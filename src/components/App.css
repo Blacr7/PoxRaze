@@ -32,13 +32,7 @@ body {
   display: -ms-grid;
   display: grid;
   grid-auto-columns: 75px;
-  grid: 'hash name noraCost'
- 'description description description'
- 'flavorText flavorText flavorText'
- 'factions rarity size'
- 'hitPoints cooldown defense'
- 'tradeable cooldown allowRanked'
- 'artist runeSet deckLimit';
+  grid: 'hash name noraCost' 'description description description' 'flavorText flavorText flavorText' 'factions rarity size' 'hitPoints . defense' 'tradeable . allowRanked' 'artist runeSet deckLimit';
 }
 
 .RuneBox li {
