@@ -21,6 +21,7 @@
     
   },
   "devDependencies": {
-    "gh-pages": "^2.0.1"
+    "gh-pages": "^2.0.1",
+    "merge": ">=1.2.1"
   }
 }
