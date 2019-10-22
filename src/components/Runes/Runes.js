@@ -1,6 +1,6 @@
 import React, { Component} from 'react';
 import { any } from 'prop-types';
-import {conditions, mechanics, spells, relics, equips, champs, abilities} from './Api files/main.js';
+import {conditions, mechanics, spells, relics, equips, champs} from './Api files/main.js';
 
 // TODO implement champs ad abilities.
 // TODO display conditions and mechanics on hover
@@ -11,29 +11,29 @@ class Runes extends Component {
     constructor(props) {
         super(props);
         this.makeRunes = this.makeRunes.bind(this);
-
+        
         // initialize the lists that will be holding all of the  sites data
         this.state = {
             listOfChampions: [],
-            listOfAbilities: [],
+            //listOfAbilities: [],
             listOfSpells: [],
             listOfEquips: [],
             listOfRelics: [],
             listOfConditions: [],
             listOfMechanics: [],
-
             //Determine what the current clicked list is
             //i.e if Relics button is clicked valueOfList: listOfRelics; and will display the list of relics
-            valueOfList: undefined,
+            valueOfList: undefined
         };
+        updateState = updateState.bind(this)
     }
-    
+
     componentDidMount(){
         // set all of the data imported from the APIs to their respective lists
         this.setState({
             listOfConditions: conditions,
             listOfChampions: champs,
-            listOfAbilities: abilities,
+            //listOfAbilities: abilities,
             listOfSpells: spells,
             listOfEquips: equips,
             listOfRelics: relics,
@@ -44,8 +44,8 @@ class Runes extends Component {
 
     // generate divs that contain all runes from the specified list
     makeRunes(listOf){
-        var gridArea = '';
-
+        let gridArea = '';
+        let faction = 0 ;
         if(listOf === undefined || listOf === any || listOf === null){
             return ''
         }else {
@@ -60,26 +60,46 @@ class Runes extends Component {
                     <div className={`RuneBox ${listOf}`}>{
                         //for each item generate an li with a gridarea and style name for each property of a rune
                         //i.e: the name property will have a gridarea for name and a class of name
-                        //e.g altar of bones flavor text will have gridarea: flavorText and class="flavorText"
+                        //e.g the flavorText for altar of bones will have gridarea: flavorText and class="flavorText"
                         
                             this.properties.map(function(item) {
                                 gridArea = {gridArea: item};
+                                // for listOfAbilities Because the abilities API has them stored as numbers inside an object 
+                                // since only 0 and 1 are the only relevant  items break the loop once you get past 1
+                                if(item > 1){
+                                    return ''
+                                }
+                                // generate the IMG for runes based on its hash value from the API, you can determine the size from "/images/runes/ (whatever size you want) /"
+                                // hash also determines the sprite of the rune
                                 if(item === "hash"){
                                     return <li key={item} className={item} style={gridArea}>
-                                                <img className="img-full" src={"https://d2aao99y1mip6n.cloudfront.net/images/runes/med/" + eachRune[item] + ".jpg"} />
-                                            </li>;
-                                }if(item === "description"){
-                                    return <li key={item} className={item} style={gridArea}>
-                                                {/*convert the first letter of the item to capital: then return the value of the item*/}
-                                                {item.charAt(0).toUpperCase() + item.slice(1)}: <p dangerouslySetInnerHTML={{ __html: eachRune[item]}}></p>
-                                            </li>;
-                                }else{
-                                    return <li key={item} className={item} style={gridArea}>
-                                                {/*convert the first letter of the item to capital: then return the value of the item*/}
-                                                {item.charAt(0).toUpperCase() + item.slice(1)}: {eachRune[item]}
+                                                <div className="img-full">
+                                                    <img className="image" src={"https://d2aao99y1mip6n.cloudfront.net/images/runes/lg/" + eachRune[item] + ".jpg"} alt="Runes Image" />
+                                                </div>
                                             </li>;
                                 }
-                                
+                                // convert the Html code in the description section of runes into neat readable text
+                                // TODO link this html code to its respective ability/condition/mechanic
+                                // TODO allow the user to tell when a word is a "keyword" wrapped in html
+                                if(item === "description" || item === 'tradeable' || item === 'allowRanked' || item === 'forSale'){
+                                    return <li key={item} className={item} style={gridArea}>
+                                                {/*convert the first letter of the item to capital: then return the value of the item*/}
+                                                {item.charAt(0).toUpperCase() + item.slice(1)}: <a dangerouslySetInnerHTML={{ __html: eachRune[item]}}></a>
+                                            </li>;
+                                }
+                                // generate abilities  of champions, relics, and spells
+                                // currently disabled for optimization and usefulness changes
+                                else if(item === 1 || item === 0){
+                                    return <li key={item} className={item} style={gridArea}>
+                                                <a dangerouslySetInnerHTML={{ __html: eachRune[item]}}></a>
+                                            </li>;
+                                }else{
+                                    // generate the rest of the items in the rune
+                                    return <li key={item} className={item} style={gridArea}>
+                                                {/*convert the first letter of the item to capital: then return the value of the item*/}
+                                                {item.charAt(0).toUpperCase() + item.slice(1)}: <span>{eachRune[item]}</span>
+                                            </li>;
+                                }
                             })
                         }
                     </div>
@@ -89,20 +109,9 @@ class Runes extends Component {
     }
 
     render(){
-        return(
-            <div>
-                {/*<button  onClick={() => this.setState({valueOfList: 'listOfAbilities'})} id="Abilities">Abilities</button>*/}
-                {/*<button  onClick={() => this.setState({valueOfList: 'listOfChampions'})} id="Champions">Champions</button>*/} 
-                <button  onClick={() => this.setState({valueOfList: 'listOfSpells'})} id="Spells">Spells</button>
-                <button  onClick={() => this.setState({valueOfList: 'listOfRelics'})} id="Relics">Relics</button>
-                <button  onClick={() => this.setState({valueOfList: 'listOfEquips'})} id="Equips">Equips</button>
-                <button  onClick={() => this.setState({valueOfList: 'listOfConditions'})} id="conditions">Conditions</button>
-                <button  onClick={() => this.setState({valueOfList: 'listOfMechanics'})} id="Mechanics">Mechanics</button>
-
-                <div ref='placement'>{this.makeRunes(this.state.valueOfList)}</div>
-            </div>
-        )
-    } 
+        return <div id="runesPlacement">{ this.makeRunes(this.state.valueOfList)}</div>
+    }
+    
 }
 
 export default Runes;

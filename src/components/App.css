@@ -1,38 +1,76 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 body {
   margin: 0;
   height: 100%;
   width: 100%;
-  background-color: #F8C471;
+  background-color: #323E3F;
+  overflow-x: hidden;
   z-index: -1;
+}
+
+button {
+  border: .1em solid #ffffff;
+  background: #323E3F;
+  color: #ffffff;
+  padding: 1em;
+  margin: 1em;
+  cursor: pointer;
+  font-size: 2em;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+button:hover {
+  background: #ffffff;
+  color: #323E3F;
+}
+
+.buttonActive {
+  background: #ffffff;
+  color: #323E3F;
 }
 
 .App {
   text-align: center;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
+.App .App-header {
+  background-color: #0A0A0A;
+  height: 50vh;
   padding: 20px;
   color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
-.App-title {
-  font-size: 1.5em;
+.App .App-title {
+  font-size: 5em;
 }
 
-.App-intro {
+.App .App-intro {
   font-size: large;
 }
 
 .RuneBox {
-  background-color: white;
-  border: solid gray;
-  padding: 2em;
+  background-color: #0A0A0A;
+  color: #ffffff;
+  border: solid #ffffff;
+  width: 80%;
+  margin: .5em auto;
   display: -ms-grid;
   display: grid;
-  grid-auto-columns: 75px;
-  grid: 'hash name noraCost' 'description description description' 'flavorText flavorText flavorText' 'factions rarity size' 'hitPoints . defense' 'tradeable . allowRanked' 'artist runeSet deckLimit';
 }
 
 .RuneBox li {
@@ -40,17 +78,112 @@ body {
   padding: .5em;
 }
 
-.RuneBox .id, .RuneBox .forSale {
+.RuneBox .id {
   display: none;
 }
 
 .RuneBox .name, .RuneBox .noraCost {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: bolder;
+}
+
+.RuneBox .name span, .RuneBox .noraCost span {
+  color: #9fbe52;
 }
 
 .RuneBox .flavorText, .RuneBox .artist, .RuneBox .runeSet {
   font-style: italic;
   font-weight: lighter;
+}
+
+.RuneBox .flavorText span {
+  color: #DF6D6D;
+}
+
+.RuneBox .artist span, .RuneBox .runeSet span {
+  color: #14EFFF;
+}
+
+.RuneBox .description, .RuneBox .factions, .RuneBox .rarity {
+  font-size: 1.25em;
+}
+
+.RuneBox .rarity span {
+  text-transform: lowercase;
+}
+
+.RuneBox .hash {
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.listOfConditions, .listOfMechanics {
+  width: 50%;
+  grid: '. name .' 'description description description' '. key .';
+}
+
+.listOfConditions .key, .listOfMechanics .key {
+  display: none;
+}
+
+.listOfAbilities {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[3];
+      grid-template-columns: repeat(3, 1fr);
+}
+
+.listOfAbilities [class="0"] {
+  grid-area: 'name';
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1 / 2;
+  -ms-grid-row: 1;
+  grid-row: 1;
+}
+
+.listOfAbilities [class="1"] {
+  grid-area: 'desc';
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 1;
+  grid-column: 2 / 3;
+  -ms-grid-row: 2;
+  grid-row: 2;
+}
+
+.listOfSpells {
+  grid: 'hash name . noraCost' 'hash factions . rarity ' 'hash tradeable forSale allowRanked' 'hash cooldown . deckLimit' 'hash description description description' 'hash flavorText flavorText flavorText' 'hash artist . runeSet';
+}
+
+.listOfRelics {
+  grid: 'hash name . noraCost' 'hash factions . rarity ' 'hash tradeable  forSale allowRanked' 'hash size hitPoints defense' 'hash description description description' 'hash flavorText flavorText flavorText' 'hash artist deckLimit runeSet';
+}
+
+.listOfEquips {
+  grid: 'hash name noraCost' 'hash factions rarity ' 'hash tradeable allowRanked' 'hash forSale deckLimit' 'hash description description' 'hash flavorText flavorText' 'hash artist runeSet';
+}
+
+@media screen and (max-width: 700px) {
+  .RuneBox {
+    width: 100%;
+  }
+  .listOfSpells {
+    grid: 'hash hash hash hash' 'name name noraCost noraCost' 'factions  factions rarity rarity ' 'tradeable forSale . allowRanked' 'cooldown cooldown deckLimit deckLimit' 'description  description description description' 'flavorText flavorText flavorText flavorText' 'artist artist runeSet runeSet';
+  }
+  .listOfRelics {
+    grid: 'hash hash hash hash' 'name name noraCost noraCost' 'factions factions factions rarity ' 'tradeable tradeable  forSale allowRanked' 'size size hitPoints defense' 'description description description description' 'flavorText flavorText flavorText flavorText' 'artist artist deckLimit runeSet';
+  }
+  .listOfEquips {
+    grid: 'hash hash hash hash'  'name name  noraCost noraCost' 'factions factions rarity rarity ' 'tradeable tradeable allowRanked allowRanked' 'forSale forSale deckLimit deckLimit' 'description description description description' 'flavorText flavorText flavorText flavorText' 'artist artist runeSet runeSet';
+  }
 }
 /*# sourceMappingURL=App.css.map */
