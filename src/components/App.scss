@@ -1,117 +1,130 @@
 * {
-  padding: 0;
-  margin: 0;
+	padding: 0;
+	margin: 0;
 }
 
 body {
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  background-color: #323E3F;
-  overflow-x: hidden;
-  z-index: -1;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #323E3F;
+	overflow-x: hidden;
+	z-index: -1;
 }
 
 button {
-  border: .1em solid #ffffff;
-  background: #323E3F;
-  color: #ffffff;
-  padding: 1em;
-  margin: 1em;
-  cursor: pointer;
-  font-size: 2em;
-  -webkit-transition: all .5s;
-  transition: all .5s;
+	border: .1em solid #ffffff;
+	background: #323E3F;
+	color: #ffffff;
+	padding: .8em;
+	margin: 1em;
+	cursor: pointer;
+	font-size: 1.8em;
+	-webkit-transition: all .5s;
+	transition: all .5s;
 }
 
 button:hover {
-  background: #ffffff;
-  color: #323E3F;
+	background: #ffffff;
+	color: #323E3F;
 }
 
 .buttonActive {
-  background: #ffffff;
-  color: #323E3F;
+	background: #ffffff;
+	color: #323E3F;
 }
 
 .App {
-  text-align: center;
+	text-align: center;
 }
 
 .App .App-header {
-  background-color: #0A0A0A;
-  height: 50vh;
-  padding: 20px;
-  color: white;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  flex-wrap: wrap;
+	background-color: #0A0A0A;
+	height: 50vh;
+	padding: 20px;
+	color: white;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .App .App-title {
-  font-size: 5em;
+	font-size: 5em;
 }
 
 .App .App-intro {
-  font-size: large;
+	font-size: large;
 }
 
-.RuneBox {
-  background-color: #0A0A0A;
-  color: #ffffff;
-  border: solid #ffffff;
-  width: 80%;
-  margin: .5em auto;
-  display: grid;
+.RuneBox{
+
+	background-color: #0A0A0A;
+	color: #ffffff;
+	border: solid #ffffff;
+	width: 80%;
+	margin: .5em auto;
+	display: grid;
+	
+
+	li {
+		list-style: none;
+		padding: .5em;
+		text-transform: capitalize;
+	}
+
+	
+  	.id {
+		display: none;
+	}
+
+	.name, .noraCost {
+		font-size: 1.2em;
+		font-weight: bolder;
+	}
+
+	.name span, .noraCost span {
+		color: #9fbe52;
+	}
+
+	.flavorText, .artist, .runeSet {
+		font-style: italic;
+		font-weight: lighter;
+	}
+
+	.flavorText span {
+		color: #DF6D6D;
+	}
+
+	.artist span, .runeSet span {
+		color: #14EFFF;
+	}
+
+	.description, .factions, .rarity {
+		font-size: 1.25em;
+	}
+
+	.rarity, .description {
+		span{
+			text-transform: lowercase;
+		}
+		a{
+			text-transform: none;
+		}
+	}
+
+	.hash {
+		padding: 0;
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-wrap: wrap;
+	}
 }
 
-.RuneBox li {
-  list-style: none;
-  padding: .5em;
-}
 
-.RuneBox .id {
-  display: none;
-}
 
-.RuneBox .name, .RuneBox .noraCost {
-  font-size: 1.2em;
-  font-weight: bolder;
-}
 
-.RuneBox .name span, .RuneBox .noraCost span {
-  color: #9fbe52;
-}
-
-.RuneBox .flavorText, .RuneBox .artist, .RuneBox .runeSet {
-  font-style: italic;
-  font-weight: lighter;
-}
-
-.RuneBox .flavorText span {
-  color: #DF6D6D;
-}
-
-.RuneBox .artist span, .RuneBox .runeSet span {
-  color: #14EFFF;
-}
-
-.RuneBox .description, .RuneBox .factions, .RuneBox .rarity {
-  font-size: 1.25em;
-}
-
-.RuneBox .rarity span {
-  text-transform: lowercase;
-}
-
-.RuneBox .hash {
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-wrap: wrap;
-}
 
 .listOfConditions, .listOfMechanics {
   width: 50%;
@@ -143,6 +156,17 @@ button:hover {
   -ms-grid-column-span: 1;
   grid-column: 2 / 3;
   grid-row: 2;
+}
+
+.listOfChampions {
+  grid: 'hash name hitPoints noraCost'
+ 'hash factions . rarity '
+ 'hash tradeable forSale allowRanked'
+ 'hash races classes deckLimit'
+ 'hash description description description'
+ 'hash damage speed defense'
+ 'hash size minRng maxRng '
+ 'hash artist . runeSet';
 }
 
 .listOfSpells {
@@ -178,6 +202,18 @@ button:hover {
 @media screen and (max-width: 700px){
   .RuneBox{
     width: 100%;
+  }
+
+  .listOfChampions{
+		grid: 'hash hash hash hash'
+		'name  name hitPoints noraCost'
+		'factions factions rarity rarity '
+		'tradeable tradeable forSale allowRanked'
+		'races races classes deckLimit'
+		'description description description description'
+		'damage damage speed defense'
+		'size size minRng maxRng '
+		'artist artist runeSet runeSet';
   }
 
   .listOfSpells{

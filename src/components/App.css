@@ -16,10 +16,10 @@ button {
   border: .1em solid #ffffff;
   background: #323E3F;
   color: #ffffff;
-  padding: 1em;
+  padding: .8em;
   margin: 1em;
   cursor: pointer;
-  font-size: 2em;
+  font-size: 1.8em;
   -webkit-transition: all .5s;
   transition: all .5s;
 }
@@ -76,6 +76,7 @@ button:hover {
 .RuneBox li {
   list-style: none;
   padding: .5em;
+  text-transform: capitalize;
 }
 
 .RuneBox .id {
@@ -108,8 +109,12 @@ button:hover {
   font-size: 1.25em;
 }
 
-.RuneBox .rarity span {
+.RuneBox .rarity span, .RuneBox .description span {
   text-transform: lowercase;
+}
+
+.RuneBox .rarity a, .RuneBox .description a {
+  text-transform: none;
 }
 
 .RuneBox .hash {
@@ -160,6 +165,10 @@ button:hover {
   grid-row: 2;
 }
 
+.listOfChampions {
+  grid: 'hash name hitPoints noraCost' 'hash factions . rarity ' 'hash tradeable forSale allowRanked' 'hash races classes deckLimit' 'hash description description description' 'hash damage speed defense' 'hash size minRng maxRng ' 'hash artist . runeSet';
+}
+
 .listOfSpells {
   grid: 'hash name . noraCost' 'hash factions . rarity ' 'hash tradeable forSale allowRanked' 'hash cooldown . deckLimit' 'hash description description description' 'hash flavorText flavorText flavorText' 'hash artist . runeSet';
 }
@@ -175,6 +184,9 @@ button:hover {
 @media screen and (max-width: 700px) {
   .RuneBox {
     width: 100%;
+  }
+  .listOfChampions {
+    grid: 'hash hash hash hash' 'name  name hitPoints noraCost' 'factions factions rarity rarity ' 'tradeable tradeable forSale allowRanked' 'races races classes deckLimit' 'description description description description' 'damage damage speed defense' 'size size minRng maxRng ' 'artist artist runeSet runeSet';
   }
   .listOfSpells {
     grid: 'hash hash hash hash' 'name name noraCost noraCost' 'factions  factions rarity rarity ' 'tradeable forSale . allowRanked' 'cooldown cooldown deckLimit deckLimit' 'description  description description description' 'flavorText flavorText flavorText flavorText' 'artist artist runeSet runeSet';
