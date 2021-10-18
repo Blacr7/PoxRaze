@@ -11,7 +11,7 @@
     - [ ] Search by only ability
   - [x] Filter by faction
   - [ ] ~~Search by unit stats i.g. (dmg, spd, range, etc)~~
-    - [ ] sort by unit stats i.g. (dmg, spd, range, etc)
+    - [x] sort by unit stats i.g. (dmg, spd, range, etc)
   - [x] Search by faction
   - [x] Search by ability
     - [ ] Search by ability level 
