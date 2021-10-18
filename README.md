@@ -1,12 +1,36 @@
-## Changes to come.
+# Changes to come.
 
-1. Champion and ability load.
-2. link abilities, mechanics, and conditions between champs, relics, and spells.
+- [x] include list of Champions and find a list of abilities.
+  - [ ] find and include the remaining list of abilities
+- [ ] link abilities, mechanics, and conditions between champs, relics, and spells.
+- [x] Search function
+  - [x] Search by race
+  - [ ] Search by only one criteria 
+  - [x] Filter by faction
+  - [ ] Search by unit stats i.g. (dmg, spd, range, etc)
+  - [x] Search by faction
+  - [x] Search by ability
+    - [ ] Search by ability level 
+  - [x] Search by name
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+## Announcements
 
-Below you will find some information on how to perform common tasks.<br>
-You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+With the recent volume of patches the database may be out of date with the current patch, if the database is currently out of date please feel free to message me.
+
+There seems to be no API for *just* abilities, ive worked around this by pulling abilities from champions and putting them into their own list for easy lookup and filtering, because of that work around however all abilities not on a champion do not currently exist in the database, and as far as i could tell every other database ive seen past or present have had this problem and no one seems to have the solution.
+
+this is why an equipment like **Bag of Boulders** will have abilities like *Bag of Boulders* but have no information on what *Bag of Boulders* actually does
+
+## Tutorial 
+* click anywhere on a collapsed rune to expand it
+
+* close expanded runes by clicking the image of the rune, if there is no image click the name
+
+* increase the number of runes shown at once with the *runes per page* section (be careful some lists have thousands of runes)
+
+* if you are deep into the pages on a search for something and you then go into a more refined search make sure to click on lower page numbers to see runes if you don't find any. 
+
+  * for example: you are on page 10 on the list of champions in the *Sundered Lands*, you then search for *skeezick*  there may not be 10 pages worth of *skeezick* in the *Sundered Lands* so you would have to click on page 1 or 2 to see your results
 
 ## Table of Contents
 
