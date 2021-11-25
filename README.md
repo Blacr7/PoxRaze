@@ -54,4 +54,6 @@ I have found an Api that includes a large sum of the abilities i was previously 
   
   * for example if you want to only search for a rune by the race start your search with !r
 
+  * advanced searching is currently not implemented when searching through (All runes)
+
 
