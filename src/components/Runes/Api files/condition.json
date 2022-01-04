@@ -1,11 +1,6 @@
 {
     "conditions": [
         {
-            "name": "Crystallize",
-            "key": "crystallize",
-            "description": "This champion is Shielded and may not move, attack, or activate special abilities. At the beginning of your turn, this champion heals 4 HP."
-        },
-        {
             "name": "Soul Tapped",
             "key": "soultapped",
             "description": "At the beginning of the affected units turn, all soultapped champions lose 2 life and you gain nora for every point of life lost this way"
@@ -318,7 +313,7 @@
         {
             "name": "Cocooned",
             "key": "cocoon",
-            "description": "This champion is Pacified, Impervious and Immobile. After 3 turns, this champion loses Cocooned and gains +1 DEF, +1 SPD and +2 DMG. This effect does not stack."
+            "description": "This champion is Pacified, Impervious and Immobile. After 3 turns, this champion loses Cooconed and gains +1 DEF, +1 SPD and +2 DMG. This effect does not stack."
         },
         {
             "name": "Summoned",
@@ -329,6 +324,11 @@
             "name": "Distracted",
             "key": "distracted",
             "description": "This unit may only activate basic attacks"
+        },
+        {
+            "name": "Crystallize",
+            "key": "crystallized",
+            "description": "This champion is Shielded and may not move, attack, or activate special abilities. At the beginning of your turn, this champion heals 4 HP."
         },
         {
             "name": "Scoured",

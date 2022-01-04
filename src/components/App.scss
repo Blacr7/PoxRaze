@@ -1,0 +1,596 @@
+$green: #9fbe52; $red: #DF6D6D; $blue: #14EFFF; $grayGreen: #323E3F; $darkBlue: #4b7bcf; $white: #ffffff;
+
+//Rarity colors ------
+$commonColor: #F6B220 ; $uncommonColor: #DD2C00; $rareColor: #3570C0; $exoticColor: #A736C6; $legendaryColor: #109F27;
+
+
+*{
+	padding: 0;
+	margin: 0;
+	background-repeat: no-repeat;
+	scroll-behavior: smooth;
+	text-decoration: none;
+	position: relative;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	background-color:$grayGreen;
+	overflow-x: hidden;
+	z-index: -1;
+}
+
+html{
+ position: revert;
+}
+
+.App {
+	text-align: center;
+	min-height: 100vh;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+
+	.App-header {
+		height: 40vh;
+		margin:  0 0 1rem;
+
+		color: $white;
+		background-color: #0A0A0A;
+
+		overflow: hidden;
+		display: grid;
+		align-content: center;
+		
+		.App-title {
+			font-size: 5em;
+			font-weight: bolder;
+		}
+	}
+
+	.appFooter{
+		bottom: 0;
+		height: 4em;
+		line-height: 4em;
+		margin: 1em auto;
+		width: 95%;
+		color: $white;
+		
+		display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+
+		a{
+			color: $green;
+		}
+	}
+}
+
+button {
+	border: .1em solid $white;
+	background:$grayGreen;
+	color: $white;
+	padding: .5em;
+	margin: 1em;
+	cursor: pointer;
+	font-size: 1.5em;
+	-webkit-transition: all .5s;
+	transition: all .5s;
+
+	&:hover {
+		background: $white;
+		color:$grayGreen;
+	}
+}
+
+.expandAll{
+	display: block;
+	margin: .6em auto;
+}
+
+.pageNumbers{
+	color: $white;
+	display: inline-flex;
+	list-style: none;
+	justify-content: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	width: 80%;
+	margin: auto;
+
+	li{
+		padding: .5em;
+		font-size: 1.2em;
+		cursor: pointer;
+	}
+
+	.activeNumber{
+		color: red;
+	}
+}
+
+.searchPlacement, .runesPlacement{
+	.searchLabel{
+		color:$white;
+		margin: 1em;
+	}
+}
+
+.markupAbility{
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+
+	.abilityIcon{
+		padding: 0 0 0 .5em;
+	}
+	
+	.name{
+		font-size: 1em;
+		padding: 0 .1em;
+		color: $green;
+	}
+
+	.abilityHover{
+		position: absolute;
+		visibility: hidden;
+		font-size: 1rem;
+		width: 300px;
+		left: -50%;
+		top: 20px;
+		color: $white;
+		text-shadow: 0 0 2px #000;
+		margin: 2px 0;
+		border: 1px solid rgba(255,255,255,0.25);
+		background: #000;
+		background-color: rgb(25,25,25);
+		background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#000));
+		border-radius: 3px;
+		box-shadow: 0 0 3px #555;
+		z-index: 5;
+
+		.cooldown, .apCost, .noraCost{
+			color: $darkBlue;
+			width: 100%;
+			font-size: unset;
+			font-weight: unset;
+		}
+		
+		.description{
+			font-size: .7rem;
+		}
+	}
+	
+	&:hover, &:focus {
+		.abilityHover{
+			display: grid;
+			visibility: visible;
+
+			.cooldown, .apCost, .noraCost{
+				color: $darkBlue;
+				width: 100%;
+				font-size: unset;
+				font-weight: unset;
+			}
+			
+			.description{
+				font-size: .7rem;
+			}
+			
+			.abilityHover{
+				left: unset;
+				top: unset;
+				bottom: 5px;
+				margin: 1em 0;
+				position: relative;
+				border: 2px solid whitesmoke;
+				border-style: inset;
+
+				&:hover{
+					border: unset;
+				}
+			}
+			
+		}
+	}
+
+	
+}
+
+.RuneBox{
+	background-color: #0A0A0A;
+	color: $white;
+	border: solid  rgba(255,255,255,0.25);
+	width: 90%;
+	margin: .5em auto;
+	display: grid;
+	
+	.collapsedRune, .expandedRune{
+		display: grid;
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	.expandedRune{
+		min-height: 500px;
+
+		.namehash{
+			z-index: 3;
+			color: ivory;
+			top:0;
+		}
+	}
+
+	input{
+		visibility: hidden;
+	}
+
+	.clickable{
+		cursor: pointer;
+	}
+
+	li {
+		list-style: none;
+		padding: .5em;
+		text-transform: capitalize;
+		cursor: pointer;
+	}
+
+	.tradeable, .forSale, .allowRanked, .races, .classes, .factions, .classes, .description{
+		cursor: revert;
+
+		li{
+			cursor: revert;
+		}
+	}
+
+	.races, .classes, .factions, .startingAbilities{
+		text-transform: capitalize;
+		ul{
+			display: inline;
+			li{
+				display: inline;
+				padding: unset;
+			}
+		}
+	}
+	
+  	.id, .rarity {
+		display: none;
+	}
+
+	.name, .noraCost {
+		font-size: 1.2em;
+		font-weight: bolder;
+
+		span{
+			color: $green;
+		}
+	}
+
+	.flavorText, .artist, .runeSet {
+		font-style: italic;
+		font-weight: lighter;
+	}
+
+	.flavorText{
+		span{
+			color: $red;
+		}
+	}
+
+	.artist, .runeSet {
+		cursor: pointer;
+		span{
+			color: $blue;
+		}
+	}
+
+	.description, .factions, .rarity {
+		font-size: 1.25em;
+	}
+
+	.hash {
+		padding: 0;
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-wrap: wrap;
+		position: relative;
+		width: 100%;
+		height: 100%;
+
+		.img-full{
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.image{
+			position: absolute;
+			transform: translate(-50%, -50%);
+			top:50%;
+			left:50%;
+		}
+
+		.stats{
+			top: 402px;
+		}
+	}
+}
+
+.listOfConditions, .listOfMechanics{
+  	width: 50%;
+  
+	.collapsedRune{
+		grid: '. name .';
+	}
+
+	.expandedRune{
+		grid: '. name .'
+		'description description description'
+		'. key .';
+
+		min-height: revert;
+	}
+
+ 	.key{
+		display: none;
+	}
+}
+
+.listOfAbilities {
+	.collapsedRune{
+		grid: 'name . noraCost';
+	}
+
+	.expandedRune{
+		grid: ' name name icon_name icon_name'
+		'ap_cost ap_cost cost cost'
+		'long_description long_description long_description long_description'
+		'level level cooldown cooldown';
+
+		min-height: unset;
+	}
+
+	.ability_id, .activated, .activation_type, .asset_id, .class_name, .comments, .prerequisite_id, .short_description,
+	.ranked, .resettable, .revision{
+		display: none;
+	}
+}
+
+.listOfChampions {
+	.collapsedRune{
+		grid: 'name . noraCost';
+	}
+
+	.expandedRune{
+		grid: 
+		// 'name name noraCost noraCost description description description description'
+		// 'hash hash hash hash startingAbilities startingAbilities startingAbilities startingAbilities'
+		// 'hash hash hash hash startingAbilities startingAbilities startingAbilities startingAbilities'
+		// 'hash hash hash hash startingAbilities startingAbilities startingAbilities startingAbilities'
+		// 'hash hash hash hash abilitySets abilitySets abilitySets abilitySets'
+		// 'hash hash hash hash abilitySets abilitySets abilitySets abilitySets'
+		// 'runeStats runeStats runeStats runeStats factions factions runeSet runeSet'
+		// 'damage speed range defense hitPoints  races classes deckLimit'
+		// 'artist artist size rarity rarity tradeable forSale allowRanked ';
+		'hash name hitPoints noraCost'
+		'hash factions factions factions '
+		'hash tradeable forSale allowRanked'
+		'hash races classes deckLimit'
+		'hash description description description'
+		'hash damage speed defense'
+		'hash size minRng maxRng '
+		'hash abilitySets abilitySets abilitySets'
+		'hash startingAbilities startingAbilities startingAbilities'
+		'hash artist . runeSet';
+
+		grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+
+		input[type="radio"]:checked + label {
+			.name{
+				color: yellow;
+			}
+		}
+	}
+
+	.description{
+		width: 100%;
+		margin: auto;
+
+		a{
+			color: $red;
+
+			&:hover{
+				color: $red;
+			}
+		}
+	}
+
+	.abilities{
+		ul{
+			.apCost, .shortDescription, .cooldown, .noraCost, .apCost{
+				display: none;
+			}
+		}
+		 
+	}
+
+	.abilities{
+		ul{
+			&:hover{
+				.apCost{
+					display: inline;
+				}
+			}
+		}
+	}
+}
+
+.listOfSpells {
+	.collapsedRune{
+		grid: 'name . noraCost';
+	}
+
+	.expandedRune{
+		grid: 'hash name . noraCost'
+		'hash factions factions factions '
+		'hash tradeable forSale allowRanked'
+		'hash cooldown . deckLimit'
+		'hash description description description'
+		'hash flavorText flavorText flavorText'
+		'hash artist . runeSet';
+
+		grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+	}
+}
+
+.listOfRelics {
+	.collapsedRune{
+		grid: 'name . noraCost';
+	}
+
+	.expandedRune{
+		grid: 
+		'hash name . noraCost'
+		'hash factions factions factions '
+		'hash tradeable  forSale allowRanked'
+		'hash size hitPoints defense'
+		'hash description description description'
+		'hash flavorText flavorText flavorText'
+		'hash artist deckLimit runeSet';
+
+		grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+	}
+}
+
+.listOfEquips {
+	.collapsedRune{
+		grid: 'name . noraCost';
+	}
+
+	.expandedRune{
+		grid: 
+		'hash name noraCost'
+		'hash factions factions '
+		'hash tradeable allowRanked'
+		'hash forSale deckLimit'
+		'hash description description'
+		'hash flavorText flavorText'
+		'hash artist runeSet';
+
+		grid-template-columns: minmax(30%, 30%) 1fr 1fr;
+	}
+}
+
+@media screen and (max-width: 1000px){
+	.App{
+		.appFooter{
+			flex-direction: column;
+		}
+	}
+	
+
+	button{
+		margin: .5em;
+		padding: .5em;
+		font-size: 1.5em;
+	}
+
+	.RuneBox{
+		width: 100%;
+		
+		.expandedRune{
+			min-height: 1000px;
+
+		}
+	}
+
+	.listOfConditions, .listOfMechanics, .listOfAbilities{
+		.expandedRune{
+			min-height: revert;
+		}
+	}
+
+	.listOfChampions{
+		.expandedRune{
+			grid: 'hash hash hash hash'
+			'name  name noraCost noraCost'
+			'factions factions hitPoints hitPoints '
+			'tradeable deckLimit forSale allowRanked'
+			'races races classes classes'
+			'description description description description'
+			'damage speed speed defense'
+			'size minRng minRng maxRng '
+			'abilitySets abilitySets abilitySets abilitySets'
+			'startingAbilities startingAbilities startingAbilities startingAbilities'
+			'artist artist runeSet runeSet';	
+
+			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+			
+		}
+	}
+
+	.listOfSpells{
+		.expandedRune{
+			grid: 'hash hash hash hash'
+			'name name noraCost noraCost'
+			'factions  factions factions factions '
+			'tradeable forSale forSale allowRanked'
+			'cooldown cooldown deckLimit deckLimit'
+			'description  description description description'
+			'flavorText flavorText flavorText flavorText'
+			'artist artist runeSet runeSet';
+
+			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+		}
+	}
+
+	.listOfRelics {
+		.expandedRune{
+			grid: 'hash hash hash hash'
+			'name name noraCost noraCost'
+			'factions factions factions factions '
+			'tradeable forSale forSale allowRanked'
+			'size hitPoints hitPoints defense'
+			'description description description description'
+			'flavorText flavorText flavorText flavorText'
+			'artist deckLimit deckLimit runeSet';
+			
+			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+		}
+	}
+
+	.listOfEquips {
+		.expandedRune{
+			grid:'hash hash hash hash' 
+			'name name  noraCost noraCost'
+			'factions factions factions factions '
+			'tradeable tradeable allowRanked allowRanked'
+			'forSale forSale deckLimit deckLimit'
+			'description description description description'
+			'flavorText flavorText flavorText flavorText'
+			'artist artist runeSet runeSet';
+
+			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+		}
+	}
+
+	.searchPlacement{
+		padding: 1em auto;
+
+		.inputContainer{
+			display: flex;
+			align-items: center;
+
+			input, select{
+				text-align: center;
+				align-self: center;
+				margin: 1em;
+			}
+		}
+	}
+}
