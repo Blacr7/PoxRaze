@@ -6,8 +6,8 @@ import './App.css';
 import {conditions, mechanics, spells, relics, equips, champs, abilities} from './Runes/Api files/main.js';
 //import {COMMON, UNCOMMON, RARE, EXOTIC, LEGENDARY, LIMITED, rune_stats} from './Runes/Images'
 
-function updateState(valueOfList){
-	this.setState({valueOfList})
+function updateList(event){
+    event.target ? this.setState({valueOfList: event.target.value}) : this.setState({valueOfList: event}) ;
 }
 
 const convertAbilityTags = (string, list) => {
@@ -44,6 +44,7 @@ const findAbilityIcon = (data, size) => {
             src={`https://d2aao99y1mip6n.cloudfront.net/images/ability_icons/${size}/icon_${data.icon_name}.gif`} 
             onError={(q)=>{q.target.onerror = null; q.target.src = `https://d2aao99y1mip6n.cloudfront.net/images/ability_icons/small/icon_${data.icon_name}.gif`}} 
             alt={`${data.icon_name} icon`}
+            value={data['name']}
         /> 
     }else{
         return ''
@@ -168,26 +169,36 @@ class App extends Component {
 
         // initialize the lists that will be holding all of the  sites data
         this.state = {
+            listOfAll : [],
+            listOfConditions: [],
             listOfChampions: [],
             listOfAbilities: [],
             listOfSpells: [],
             listOfEquips: [],
             listOfRelics: [],
-            listOfConditions: [],
             listOfMechanics: [],
-            
             //Determine what the current clicked list is
             //i.e if Relics button is clicked valueOfList: listOfRelics; and will display the list of relics
             valueOfList: undefined
         };
 
-        updateState = updateState.bind(this)
+        updateList = updateList.bind(this)
         
     }
 
     componentDidMount(){
         // set all of the data imported from the APIs to their respective lists
         this.setState({
+            listOfAll : equips.concat(relics, spells, champs).sort((a, b) => {
+                let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            }),
             listOfConditions: conditions,
             listOfChampions: champs,
             listOfAbilities: abilities,
@@ -210,8 +221,6 @@ class App extends Component {
 			</header>    
 
 			<div id='placement'>
-                {/* the various buttons that will prompt what list of runes to search through */}
-				<ControlButtons />
 
                 {/* the displayed information will be organized into lists of runes that share similarities. */}
                 {/* currently lists can only be organized by "Name" of rune and the value of the list*/}
@@ -220,6 +229,7 @@ class App extends Component {
 
             <div className='appFooter'> 
                 <span>© Art and data related to PoxNora are property of <a href="http://www.desertowlgames.com/" target="blank">Desert Owl Games</a> </span>
+                <span><a href="https://github.com/Blacr7/PoxRaze/blob/master/README.md#tutorial" target="blank">Tutorial</a></span>
                 <span><a href="https://blacr7.github.io/Portfolio/" target="blank">© Robert Black JR, 2018 </a></span>
             </div>
 		</div>
@@ -230,16 +240,17 @@ class App extends Component {
 class ControlButtons extends Component{
     render(){
         return(
-            <div className="controlButtons">
-                
-                <button   onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
-                <button   onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
-                <button   onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
-               	<button   onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
-			    <button   onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
-                <button   onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
-                <button   onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
-            </div>
+                <select name='listOf' onChange={updateList} defaultValue=''>
+                    <option value=''>Select a List</option>
+                    <option value='listOfAll'>All Runes</option>
+                    <option value='listOfAbilities'>Abilities</option>
+                    <option value='listOfChampions'>Champions</option>
+                    <option value='listOfConditions'>Conditions</option>
+                    <option value='listOfEquips'>Equips</option>
+                    <option value='listOfMechanics'>Mechanics</option>
+                    <option value='listOfRelics'>Relics</option>
+                    <option value='listOfSpells'>Spells</option>
+                </select>
         )
     } 
 }
@@ -260,7 +271,7 @@ class Rune extends Component{
     
             this.upgradeAbilities = this.upgradeAbilities.bind(this);
         }else{
-            this.state ={
+            this.state = {
                 noraCost: props.eachRune.noraCost,
             }
         }
@@ -271,6 +282,7 @@ class Rune extends Component{
         let findAbility = this.abilitySets[value[0]].find(innerValue => innerValue.id === +value.slice(4));
 
         this.state.active[value[0]].fill(false);
+
         this.setState(update(this.state, {
             active: {
                 [value[0]]: {
@@ -292,8 +304,9 @@ class Rune extends Component{
     }
 
     buildRunes(){
-        const {eachRune, listKeys, index, display, toggleRunes, abilities, sortBy} = this.props;
+        const {eachRune, index, display, toggleRunes, abilities, sortBy} = this.props;
         const { noraCost } = this.state;
+
         const nameLevel = (
             eachRune.level !== undefined && eachRune.level > 0 //determine if the current rune has a assigned level 
             ? 
@@ -302,7 +315,7 @@ class Rune extends Component{
             <b className='name' >{eachRune.name}</b> // if no leave the name as is
         )
 
-        const expandedResult = (displayToggle) =>{ // expand the current rune and display more of its information   
+        const expandedResult = (displayToggle) => { // expand the current rune and display more of its information   
             let abilityList = [], abilitySets = [], key = 0, collapsedRune = '';
     
             const StartingAbilities = (item) => {// StartingAbilities is a list of all the abilities a champion has base
@@ -350,7 +363,7 @@ class Rune extends Component{
                         }
                     </div>
             }
-            
+
             const NoraCost = (item) => {
                 return <li key={key++} className={item} style={{gridArea: item}} onClick={sortBy} >
                        {item}: <span className={item}>{noraCost}</span>
@@ -386,9 +399,15 @@ class Rune extends Component{
                             {item}: <ul>{eachRune[item].map((value, key) => {return <li key={key}>{" " + value}</li> })}</ul>
                         </div>; 
             }
-    
+
             const IconName = (item) => { // run the icons found in a rune through the FindAbilityIcon function to convert them to their respective icon image
-                return <li key={key++} className={item} style={{gridArea: item}}>
+                return <li 
+                            key={key++}
+                            className={item} 
+                            style={{gridArea: item}} 
+                            //onClick={() => {updateList('listOfAll')}}
+                            //onClick={this.props.search}
+                        >
                             <span className="largeIcon">{findAbilityIcon(eachRune, 'large')}</span>
                         </li>;
             }
@@ -418,8 +437,8 @@ class Rune extends Component{
                             {item}: <span className={item}>{eachRune[item]}</span>
                         </li>;
             }
-    
-            return <div key={eachRune.name} className='expandedRune' id={eachRune.name}>{ listKeys.map((item) => {
+
+            return <div key={eachRune.name} className='expandedRune' id={eachRune.name}>{ Object.keys(eachRune).map((item) => {
                     if(item === "abilitySets"){return AbilitySets(item);}
                     if(item === "startingAbilities"){ return  StartingAbilities(item);}
                     if(Array.isArray(eachRune[item])){return IsAnArray(item);}
@@ -502,7 +521,7 @@ class Runes extends Component {
 
     render(){
         const {currentPage, display, sortBy, toggled} = this.state;
-        const {displayData, displayListName, abilities, displayNumber} = this.props;
+        const {displayData, displayListName, abilities, displayNumber, search} = this.props;
         let theDisplayNumber = displayNumber.current ? displayNumber.current.value : 20;
         const lastIndex = currentPage * theDisplayNumber;
         const firstIndex = lastIndex - theDisplayNumber
@@ -512,13 +531,13 @@ class Runes extends Component {
             return <div key={i} className={`RuneBox ${displayListName}`}>
                 <Rune
                     key={item.id ? item.id : item.key}
-                    eachRune={item} 
-                    listKeys={Object.keys(displayData[0])} 
+                    eachRune={item}  
                     index={i} 
                     display={display[i]}
                     toggleRunes={this.toggleRunes.bind(this)}
                     abilities={abilities}
                     sortBy={this.sortBy.bind(this)}
+                    search={search}
                 />
             </div>
         };
@@ -553,8 +572,6 @@ class Runes extends Component {
                 renderItem={renderRunes}
                 renderWhenEmpty={() => <div key={'Empty List'} className="RunesErrorMessage emptyList"><h3>No Items Found</h3></div>}
                 
-                
-                //groupBy={sortBy}
                 sortBy={[{key: sortBy, descending: toggled}]}
             />}
             
@@ -609,9 +626,12 @@ class RunesList extends React.Component {
     }
 
     updateSearch(event){
-        this.setState({
-            search: event.target.value,
-        });
+        this.setState({search: event.target.value,})
+        // event.target.value ? 
+        //     (
+        //     this.setState({search: event.target.value,})
+        //     )
+        
     }
 
     updateFaction(event){
@@ -625,6 +645,21 @@ class RunesList extends React.Component {
         let abilityUpgrades, filteredByDescription;
 
         const {displayData, displayListName, abilities} = this.props, {search, displayNumber, faction} = this.state
+        
+        function advancedSearchFilter(data, state, abilityLocation){
+            filtered = data.filter(
+                rune => {
+                    switch (state[1]){
+                        case 'n': 
+                            return rune.name.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1;
+                        case 'a': 
+                            return filteredByDescription = rune[abilityLocation].toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1;
+                        default:
+                            return <div className="RunesErrorMessage"><h3>Rune not Found</h3></div>
+                    }
+                }
+            )
+        }
 
         try {
             function filterFaction(data, state){
@@ -632,9 +667,21 @@ class RunesList extends React.Component {
             }
 
             function filterData(data, state){
-                if(state.length < 3 ){
+                if(state.length < 3){
                     return filtered = data;
-                }else if(state[0] === '!' && state.length > 5){
+                }else if(state[0] === '!' && state.length < 5){
+                    return filtered = data;
+                }else if(state[0] === '!' && state.length >= 5 && (displayListName === 'listOfSpells' || displayListName === 'listOfRelics' || displayListName === 'listOfEquips' )){
+                    advancedFilter = state.slice(2);
+                    advancedSearchFilter(data, state, 'description');
+
+                    return filtered;
+                }else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfAbilities'){
+                    advancedFilter = state.slice(2);
+                    advancedSearchFilter(data, state, 'long_description');
+
+                    return filtered;
+                }else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfChampions'){
                     advancedFilter = state.slice(2);
 
                     filtered = data.filter(
@@ -643,11 +690,14 @@ class RunesList extends React.Component {
                                 case 'n': 
                                     return rune.name.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1;
                                 case 'a': 
-                                    return [
-                                        
-                                        rune.description.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1,
-                                        rune.startingAbilities.map(value => value.name.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1).filter(Boolean)
-                                    ]
+                                    filteredByStartingAbilities = rune.startingAbilities.map(value => value.name.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1).filter(Boolean)
+                                    
+                                    abilityUpgrades = rune.abilitySets.map(innerValue => {return innerValue.abilities.map(thirdInnerValue =>{ return thirdInnerValue.name })});
+                                    filteredByAbilityUpgrades = abilityUpgrades.flat().map(value => value.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1).filter(Boolean);
+                                    
+                                    filteredByRace = rune.races.map(value => value.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1).filter(Boolean)
+
+                                    return filteredByStartingAbilities[0] || filteredByAbilityUpgrades[0]
                                 case 'r': 
                                     return rune.races.map(value => value.toLowerCase().indexOf(advancedFilter.toLowerCase()) !== -1).filter(Boolean)[0];
                                 default:
@@ -655,7 +705,6 @@ class RunesList extends React.Component {
                             }
                         }
                     )
-                    console.log(advancedFilter, filtered, state[1])
                     return filtered;
                 }else{
                     filtered = data.filter(
@@ -674,8 +723,8 @@ class RunesList extends React.Component {
                             }else if(rune.description !== undefined){
                                 filteredByDescription = rune.description.toLowerCase().indexOf(state.toLowerCase()) !== -1;
                                 return filteredByName || filteredByDescription
-                            }else if(rune.shortDescription !== undefined){
-                                filteredByDescription = rune.shortDescription.toLowerCase().indexOf(state.toLowerCase()) !== -1;
+                            }else if(rune['long_description'] !== undefined){
+                                filteredByDescription = rune['long_description'].toLowerCase().indexOf(state.toLowerCase()) !== -1;
                                 return filteredByName || filteredByDescription
                             }
                             return filteredByName
@@ -703,6 +752,9 @@ class RunesList extends React.Component {
             <div className="searchPlacement">
                 <ul>
                     <div className="inputContainer">
+                        {/* the various buttons that will prompt what list of runes to search through */}
+                        <label htmlFor='listOf' className="searchLabel">Runes: </label>
+				        <ControlButtons />
                         <label className="searchLabel" htmlFor="displayNumber">Runes per Page: </label>
                         <input ref={displayNumber} type="number" className="displayNumber" id="displayNumber" defaultValue="15" min="1"></input>
                     
@@ -723,7 +775,7 @@ class RunesList extends React.Component {
                         </select>
                     </div>
                      
-                    <Runes displayListName={displayListName} displayData={filtered} abilities={abilities} displayNumber={displayNumber}></Runes>
+                    <Runes displayListName={displayListName} displayData={filtered} abilities={abilities} displayNumber={displayNumber} search={this.updateSearch.bind(this)}></Runes>
                 </ul>
             </div>
         )

@@ -120,7 +120,7 @@ button:hover {
   color: red;
 }
 
-.searchPlacement .searchLabel, .runesPlacement .searchLabel {
+.searchLabel {
   color: #ffffff;
   margin: 1em;
 }
@@ -338,6 +338,20 @@ button:hover {
   top: 402px;
 }
 
+.listOfAll .collapsedRune {
+  grid: 'name . noraCost';
+}
+
+.listOfAll .expandedRune {
+  grid: 'hash name hitPoints noraCost' 'hash factions factions factions ' 'hash tradeable forSale allowRanked' 'hash races classes deckLimit' 'hash cooldown . deckLimit' 'hash description description description' 'hash damage speed defense' 'hash size minRng maxRng ' 'hash abilitySets abilitySets abilitySets' 'hash startingAbilities startingAbilities startingAbilities' 'hash flavorText flavorText flavorText' 'hash artist . runeSet';
+  -ms-grid-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+      grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+}
+
+.listOfAll .expandedRune input[type="radio"]:checked + label .name {
+  color: yellow;
+}
+
 .listOfConditions, .listOfMechanics {
   width: 50%;
 }
@@ -454,6 +468,11 @@ button:hover {
   }
   .listOfConditions .expandedRune, .listOfMechanics .expandedRune, .listOfAbilities .expandedRune {
     min-height: revert;
+  }
+  .listOfAll .expandedRune {
+    grid: 'hash hash hash hash' '. name hitPoints noraCost' 'factions factions factions factions ' '. tradeable forSale allowRanked' '. races classes deckLimit' '. cooldown . deckLimit' '. description description description' '. damage speed defense' '. size minRng maxRng ' 'abilitySets abilitySets abilitySets abilitySets' 'startingAbilities startingAbilities startingAbilities startingAbilities' 'flavorText flavorText flavorText flavorText' '. artist . runeSet';
+    -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+        grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
   }
   .listOfChampions .expandedRune {
     grid: 'hash hash hash hash' 'name  name noraCost noraCost' 'factions factions hitPoints hitPoints ' 'tradeable deckLimit forSale allowRanked' 'races races classes classes' 'description description description description' 'damage speed speed defense' 'size minRng minRng maxRng ' 'abilitySets abilitySets abilitySets abilitySets' 'startingAbilities startingAbilities startingAbilities startingAbilities' 'artist artist runeSet runeSet';
