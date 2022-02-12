@@ -111,11 +111,9 @@ button {
 	}
 }
 
-.searchPlacement, .runesPlacement{
-	.searchLabel{
-		color:$white;
-		margin: 1em;
-	}
+.searchLabel{
+	color:$white;
+	margin: 1em;
 }
 
 .markupAbility{
@@ -321,6 +319,36 @@ button {
 	}
 }
 
+.listOfAll{
+	.collapsedRune{
+		grid: 'name . noraCost';
+	}
+
+	.expandedRune{
+		grid: 
+		'hash name hitPoints noraCost'
+		'hash factions factions factions '
+		'hash tradeable forSale allowRanked'
+		'hash races classes deckLimit'
+		'hash cooldown . deckLimit'
+		'hash description description description'
+		'hash damage speed defense'
+		'hash size minRng maxRng '
+		'hash abilitySets abilitySets abilitySets'
+		'hash startingAbilities startingAbilities startingAbilities'
+		'hash flavorText flavorText flavorText'
+		'hash artist . runeSet';
+
+		grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+
+		input[type="radio"]:checked + label {
+			.name{
+				color: yellow;
+			}
+		}
+	}
+}
+
 .listOfConditions, .listOfMechanics{
   	width: 50%;
   
@@ -368,15 +396,6 @@ button {
 
 	.expandedRune{
 		grid: 
-		// 'name name noraCost noraCost description description description description'
-		// 'hash hash hash hash startingAbilities startingAbilities startingAbilities startingAbilities'
-		// 'hash hash hash hash startingAbilities startingAbilities startingAbilities startingAbilities'
-		// 'hash hash hash hash startingAbilities startingAbilities startingAbilities startingAbilities'
-		// 'hash hash hash hash abilitySets abilitySets abilitySets abilitySets'
-		// 'hash hash hash hash abilitySets abilitySets abilitySets abilitySets'
-		// 'runeStats runeStats runeStats runeStats factions factions runeSet runeSet'
-		// 'damage speed range defense hitPoints  races classes deckLimit'
-		// 'artist artist size rarity rarity tradeable forSale allowRanked ';
 		'hash name hitPoints noraCost'
 		'hash factions factions factions '
 		'hash tradeable forSale allowRanked'
@@ -515,6 +534,27 @@ button {
 		}
 	}
 
+	.listOfAll{
+		.expandedRune{
+			grid: 'hash hash hash hash'
+			'. name hitPoints noraCost'
+			'factions factions factions factions '
+			'. tradeable forSale allowRanked'
+			'. races classes deckLimit'
+			'. cooldown . deckLimit'
+			'. description description description'
+			'. damage speed defense'
+			'. size minRng maxRng '
+			'abilitySets abilitySets abilitySets abilitySets'
+			'startingAbilities startingAbilities startingAbilities startingAbilities'
+			'flavorText flavorText flavorText flavorText'
+			'. artist . runeSet';
+
+			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+		}
+		
+	}
+
 	.listOfChampions{
 		.expandedRune{
 			grid: 'hash hash hash hash'
@@ -530,7 +570,6 @@ button {
 			'artist artist runeSet runeSet';	
 
 			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
-			
 		}
 	}
 
