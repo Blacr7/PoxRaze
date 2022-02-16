@@ -4,11 +4,13 @@
   "private": true,
   "homepage": "https://blacr7.github.io/PoxRaze",
   "dependencies": {
-    "@types/react": "^16.4.13",
-    "ajv": "^6.10.0",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-icons": "^3.0.5",
+    "@types/react": "^16.9.19",
+    "ajv": "^6.11.0",
+    "flatlist-react": "^1.4.3",
+    "react": "^16.12.0",
+    "react-addons-update": "^15.6.3",
+    "react-dom": "^16.12.0",
+    "react-icons": "^3.9.0",
     "react-scripts": "1.1.5"
   },
   "scripts": {
@@ -20,13 +22,16 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "gh-pages": "^2.0.1",
     "merge": ">=2.1.1"
+=======
+    "gh-pages": "^2.2.0",
+    "merge": ">=1.2.1",
+    "ws": "3.3.2"
+>>>>>>> gh-pages
   },
   "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
+    "defaults"
   ]
 }
