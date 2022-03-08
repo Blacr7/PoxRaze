@@ -53,11 +53,3 @@ I have found an Api that includes a large sum of the abilities i was previously 
   * for example if you want to only search for a rune by the name start your search with !n
   
   * for example if you want to only search for a rune by the race start your search with !r
-
-<<<<<<< HEAD
-  * advanced searching is currently not implemented when searching through (All runes)
-
-
-=======
-  * for example if you want to only search for a rune by the ability start your search with !a
->>>>>>> gh-pages
