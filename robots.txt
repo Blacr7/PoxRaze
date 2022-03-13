@@ -1,6 +1,2 @@
 User-agent: *
-<<<<<<< HEAD
 Allow: /
-=======
-Allow: /
->>>>>>> gh-pages
