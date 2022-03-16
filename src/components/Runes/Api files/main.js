@@ -10,5 +10,5 @@ export{
     spells,
     equips,
     relics,
-    abilities
+    abilities,
 }
