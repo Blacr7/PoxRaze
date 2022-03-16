@@ -3,8 +3,8 @@ import update from 'react-addons-update';
 import { any } from 'prop-types';
 import FlatList from 'flatlist-react';
 import './App.css';
+
 import {conditions, mechanics, spells, relics, equips, champs, abilities} from './Runes/Api files/main.js';
-//import {COMMON, UNCOMMON, RARE, EXOTIC, LEGENDARY, LIMITED} from './Runes/Images'
 
 function updateList(event){
     event.target ? this.setState({valueOfList: event.target.value}) : this.setState({valueOfList: event}) ;
@@ -189,7 +189,7 @@ class App extends Component {
     componentDidMount(){
         // set all of the data imported from the APIs to their respective lists
         this.setState({
-            listOfAll : equips.concat(relics, spells, champs).sort((a, b) => {
+            listOfAll: equips.concat(relics, spells, champs).sort((a, b) => {
                 let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                 if (nameA < nameB) {
                     return -1;
