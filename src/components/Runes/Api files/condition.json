@@ -1,6 +1,11 @@
 {
     "conditions": [
         {
+            "name": "Crystallize",
+            "key": "crystallize",
+            "description": "This champion is Shielded and may not move, attack, or activate special abilities. At the beginning of your turn, this champion heals 4 HP."
+        },
+        {
             "name": "Soul Tapped",
             "key": "soultapped",
             "description": "At the beginning of the affected units turn, all soultapped champions lose 2 life and you gain nora for every point of life lost this way"
@@ -324,11 +329,6 @@
             "name": "Distracted",
             "key": "distracted",
             "description": "This unit may only activate basic attacks"
-        },
-        {
-            "name": "Crystallize",
-            "key": "crystallized",
-            "description": "This champion is Shielded and may not move, attack, or activate special abilities. At the beginning of your turn, this champion heals 4 HP."
         },
         {
             "name": "Scoured",

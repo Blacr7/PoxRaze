@@ -3,11 +3,15 @@ import update from 'react-addons-update';
 import { any } from 'prop-types';
 import FlatList from 'flatlist-react';
 import './App.css';
-
+import "babel-polyfill";
 import {conditions, mechanics, spells, relics, equips, champs, abilities} from './Runes/Api files/main.js';
 
-function updateList(event){
-    event.target ? this.setState({valueOfList: event.target.value}) : this.setState({valueOfList: event}) ;
+// function updateList(event){
+//     event.target ? this.setState({valueOfList: event.target.value}) : this.setState({valueOfList: event}) ;
+// }
+
+function updateState(valueOfList){
+	this.setState({valueOfList})
 }
 
 const convertAbilityTags = (string, list) => {
@@ -182,8 +186,8 @@ class App extends Component {
             valueOfList: undefined
         };
 
-        updateList = updateList.bind(this)
-        
+        //updateList = updateList.bind(this)
+        updateState = updateState.bind(this)
     }
 
     componentDidMount(){
@@ -217,7 +221,7 @@ class App extends Component {
 		<div className="App">
 			<header className="App-header">
                 <h1 className="App-title">PoxRaze</h1>
-                <span>A PoxNora Database</span>
+                <span>The PoxNora Search Engine</span>
 			</header>    
 
 			<div id='placement'>
@@ -240,17 +244,27 @@ class App extends Component {
 class ControlButtons extends Component{
     render(){
         return(
-                <select name='listOf' onChange={updateList} defaultValue=''>
-                    <option value=''>Select a List</option>
-                    <option value='listOfAll'>All Runes</option>
-                    <option value='listOfAbilities'>Abilities</option>
-                    <option value='listOfChampions'>Champions</option>
-                    <option value='listOfConditions'>Conditions</option>
-                    <option value='listOfEquips'>Equips</option>
-                    <option value='listOfMechanics'>Mechanics</option>
-                    <option value='listOfRelics'>Relics</option>
-                    <option value='listOfSpells'>Spells</option>
-                </select>
+            <div className="controlButtons">
+                <button   onClick={() => updateState('listOfAll')} id="All Runes">All Runes</button>
+                <button   onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
+                <button   onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
+                <button   onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
+                <button   onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
+               	<button   onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
+                <button   onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
+                <button   onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
+            </div>
+                // <select name='listOf' onChange={updateList} defaultValue=''>
+                //     <option value=''>Select a List</option>
+                //     <option value='listOfAll'>All Runes</option>
+                //     <option value='listOfAbilities'>Abilities</option>
+                //     <option value='listOfChampions'>Champions</option>
+                //     <option value='listOfConditions'>Conditions</option>
+                //     <option value='listOfEquips'>Equips</option>
+                //     <option value='listOfMechanics'>Mechanics</option>
+                //     <option value='listOfRelics'>Relics</option>
+                //     <option value='listOfSpells'>Spells</option>
+                // </select>
         )
     } 
 }
@@ -571,7 +585,12 @@ class Runes extends Component {
             {<FlatList
                 list={currentRunes}
                 renderItem={renderRunes}
-                renderWhenEmpty={() => <div key={'Empty List'} className="RunesErrorMessage emptyList"><h3>No Items Found</h3></div>}
+                renderWhenEmpty={() => 
+                    <div key={'Empty List'} className="RunesErrorMessage emptyList">
+                        <h3>No Runes Found</h3>
+                        
+                        <span>Select a list from the "Runes" dropdown, or select a valid page number</span>
+                    </div>}
                 
                 sortBy={[{key: sortBy, descending: toggled}]}
             />}
@@ -751,10 +770,8 @@ class RunesList extends React.Component {
 
         return (
             <div className="searchPlacement">
-                <ul>
                     <div className="inputContainer">
                         {/* the various buttons that will prompt what list of runes to search through */}
-                        <label htmlFor='listOf' className="searchLabel">Runes: </label>
 				        <ControlButtons />
                         <label className="searchLabel" htmlFor="displayNumber">Runes per Page: </label>
                         <input ref={displayNumber} type="number" className="displayNumber" id="displayNumber" defaultValue="15" min="1"></input>
@@ -777,7 +794,6 @@ class RunesList extends React.Component {
                     </div>
                      
                     <Runes displayListName={displayListName} displayData={filtered} abilities={abilities} displayNumber={displayNumber} search={this.updateSearch.bind(this)}></Runes>
-                </ul>
             </div>
         )
     }

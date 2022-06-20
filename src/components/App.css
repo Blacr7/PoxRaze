@@ -66,7 +66,9 @@ html {
 }
 
 .App .appFooter a {
-  color: #9fbe52;
+  color: white;
+  font-style: italic;
+  text-decoration: underline;
 }
 
 button {
@@ -84,6 +86,10 @@ button {
 button:hover {
   background: #ffffff;
   color: #323E3F;
+}
+
+.emptyList {
+  color: white;
 }
 
 .expandAll {
@@ -496,14 +502,6 @@ button:hover {
   }
   .searchPlacement {
     padding: 1em auto;
-  }
-  .searchPlacement .inputContainer {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
   }
   .searchPlacement .inputContainer input, .searchPlacement .inputContainer select {
     text-align: center;
