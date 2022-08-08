@@ -5,7 +5,7 @@
   "homepage": "https://blacr7.github.io/PoxRaze",
   "dependencies": {
     "@types/react": "^16.9.19",
-    "ajv": "^6.11.0",
+    "ajv": "^6.12.3",
     "babel-polyfill": "^6.26.0",
     "flatlist-react": "^1.4.3",
     "react": "^16.12.0",
