@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 * {
   padding: 0;
   margin: 0;
@@ -122,6 +123,11 @@ button:hover {
   cursor: pointer;
 }
 
+.pageNumbers .startOf {
+  text-decoration: underline;
+  pointer-events: none;
+}
+
 .pageNumbers .activeNumber {
   color: red;
 }
@@ -153,7 +159,7 @@ button:hover {
   font-size: 1rem;
   width: 300px;
   left: -50%;
-  top: 20px;
+  top: 30px;
   color: #ffffff;
   text-shadow: 0 0 2px #000;
   margin: 2px 0;
@@ -380,12 +386,12 @@ button:hover {
 }
 
 .listOfAbilities .expandedRune {
-  grid: ' name name icon_name icon_name' 'ap_cost ap_cost cost cost' 'long_description long_description long_description long_description' 'level level cooldown cooldown';
+  grid: ' name name icon_name icon_name' ' name name iconName iconName' 'ap_cost ap_cost cost cost' 'apCost apCost noraCost noraCost' 'short_description short_description short_description short_description' 'shortDescription  shortDescription shortDescription shortDescription' 'level level cooldown cooldown';
   min-height: unset;
 }
 
-.listOfAbilities .ability_id, .listOfAbilities .activated, .listOfAbilities .activation_type, .listOfAbilities .asset_id, .listOfAbilities .class_name, .listOfAbilities .comments, .listOfAbilities .prerequisite_id, .listOfAbilities .short_description,
-.listOfAbilities .ranked, .listOfAbilities .resettable, .listOfAbilities .revision {
+.listOfAbilities .ability_id, .listOfAbilities .activated, .listOfAbilities .activation_type, .listOfAbilities .asset_id, .listOfAbilities .class_name, .listOfAbilities .comments, .listOfAbilities .prerequisite_id, .listOfAbilities .long_description,
+.listOfAbilities .ranked, .listOfAbilities .resettable, .listOfAbilities .revision, .listOfAbilities .default, .listOfAbilities .activationType {
   display: none;
 }
 
@@ -476,7 +482,7 @@ button:hover {
     min-height: revert;
   }
   .listOfAll .expandedRune {
-    grid: 'hash hash hash hash' '. name hitPoints noraCost' 'factions factions factions factions ' '. tradeable forSale allowRanked' '. races classes deckLimit' '. cooldown . deckLimit' '. description description description' '. damage speed defense' '. size minRng maxRng ' 'abilitySets abilitySets abilitySets abilitySets' 'startingAbilities startingAbilities startingAbilities startingAbilities' 'flavorText flavorText flavorText flavorText' '. artist . runeSet';
+    grid: ' hash hash hash' ' name hitPoints noraCost' 'factions factions factions ' 'tradeable forSale allowRanked' ' races classes deckLimit' ' cooldown . deckLimit' 'description description description' ' damage speed defense' ' size minRng maxRng ' 'abilitySets abilitySets abilitySets' 'startingAbilities startingAbilities startingAbilities' ' flavorText flavorText flavorText' 'artist . runeSet';
     -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
         grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
   }

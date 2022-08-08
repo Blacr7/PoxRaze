@@ -1,5 +1,5 @@
 $green: #9fbe52; $red: #DF6D6D; $blue: #14EFFF; $grayGreen: #323E3F; $darkBlue: #4b7bcf; $white: #ffffff;
-
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 //Rarity colors ------
 $commonColor: #F6B220 ; $uncommonColor: #DD2C00; $rareColor: #3570C0; $exoticColor: #A736C6; $legendaryColor: #109F27;
 
@@ -112,6 +112,11 @@ button {
 		cursor: pointer;
 	}
 
+	.startOf{
+		text-decoration: underline;
+		pointer-events: none;
+	}
+
 	.activeNumber{
 		color: red;
 	}
@@ -143,7 +148,7 @@ button {
 		font-size: 1rem;
 		width: 300px;
 		left: -50%;
-		top: 20px;
+		top: 30px;
 		color: $white;
 		text-shadow: 0 0 2px #000;
 		margin: 2px 0;
@@ -382,15 +387,18 @@ button {
 
 	.expandedRune{
 		grid: ' name name icon_name icon_name'
+		' name name iconName iconName'
 		'ap_cost ap_cost cost cost'
-		'long_description long_description long_description long_description'
+		'apCost apCost noraCost noraCost'
+		'short_description short_description short_description short_description'
+		'shortDescription  shortDescription shortDescription shortDescription'
 		'level level cooldown cooldown';
 
 		min-height: unset;
 	}
 
-	.ability_id, .activated, .activation_type, .asset_id, .class_name, .comments, .prerequisite_id, .short_description,
-	.ranked, .resettable, .revision{
+	.ability_id, .activated, .activation_type, .asset_id, .class_name, .comments, .prerequisite_id, .long_description,
+	.ranked, .resettable, .revision, .default, .activationType{
 		display: none;
 	}
 }
@@ -542,19 +550,19 @@ button {
 
 	.listOfAll{
 		.expandedRune{
-			grid: 'hash hash hash hash'
-			'. name hitPoints noraCost'
-			'factions factions factions factions '
-			'. tradeable forSale allowRanked'
-			'. races classes deckLimit'
-			'. cooldown . deckLimit'
-			'. description description description'
-			'. damage speed defense'
-			'. size minRng maxRng '
-			'abilitySets abilitySets abilitySets abilitySets'
-			'startingAbilities startingAbilities startingAbilities startingAbilities'
-			'flavorText flavorText flavorText flavorText'
-			'. artist . runeSet';
+			grid: ' hash hash hash'
+			' name hitPoints noraCost'
+			'factions factions factions '
+			'tradeable forSale allowRanked'
+			' races classes deckLimit'
+			' cooldown . deckLimit'
+			'description description description'
+			' damage speed defense'
+			' size minRng maxRng '
+			'abilitySets abilitySets abilitySets'
+			'startingAbilities startingAbilities startingAbilities'
+			' flavorText flavorText flavorText'
+			'artist . runeSet';
 
 			grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
 		}

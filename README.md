@@ -34,7 +34,7 @@ I have found an Api that includes a large sum of the abilities i was previously 
 
 * increase the number of runes shown at once with the *runes per page* section (be careful some lists have thousands of runes)
 
-* if you are deep into the pages on a search for something and you then go into a more refined search make sure to click on lower page numbers to see runes if you don't find any. 
+* if you are deep into the pages on a search and you then go into a more refined search make sure to click on lower page numbers to see runes if you don't find any. 
 
   * for example: you are on page 10 on the list of champions in the *Sundered Lands*, you then search for *skeezick*  there may not be 10 pages worth of *skeezick* in the *Sundered Lands* so you would have to click on page 1 or 2 to see your results
 
@@ -47,11 +47,31 @@ I have found an Api that includes a large sum of the abilities i was previously 
   * sorting changes the list of runes from DES to AES or vice versa
   
   * rune lists are default sorted by rune name 
+  
+  * sorting only affects the runes on the page you are currently on, but the same sorting criteria will be applied to all pages
 
-* currently implementing Advanced searching which will be activated with !(the letter of your search target) only race and name are implemented at this time
+
+* currently implementing Advanced searching which will be activated with !(the letter of your search target) 
 
   * for example if you want to only search for a rune by the name start your search with !n
-  
-  * for example if you want to only search for a rune by the race start your search with !r
 
   * for example if you want to only search for a rune by the ability start your search with !a
+
+
+* you can now filter champions by race
+
+  * you can only filter champions by race, if you are doing a search with "All Runes", "Spells", "Relics", etc  filtering by race will remove all results without a race
+
+* You can now click on a abilities Icon in order to search "All Runes" for that ability or that abilities name, for condition and mechanics click the name
+
+  * filtering this way uses the "All Runes" tab
+
+    * if you want to search through a different list of runes simply click the button with the runes you want to search through
+
+  * ability searching currently ignores ability levels
+
+    * E.G a search for Fire Bomb with show all levels of fire bomb not just the one you clicked
+
+  * most Conditions and Mechanics are tied to abilities, and the search feature does not look "inside" abilities unless you are on the "Abilities" tab, so when using this feature to search for a condition or mechanic it might be more beneficial to search through the "abilities" tab find the ability you want then search for that ability
+
+    * I am currently working on a way to automate this or at least make it more user friendly
