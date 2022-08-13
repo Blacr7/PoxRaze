@@ -3,12 +3,11 @@ import update from 'react-addons-update';
 import { any } from 'prop-types';
 import FlatList from 'flatlist-react';
 import './App.css';
-import "babel-polyfill";
-import {conditions, mechanics, spells, relics, equips, champs, champAbilities, abilities} from './Runes/Api files/main.js';
-
-// function updateList(event){
-//     event.target ? this.setState({valueOfList: event.target.value}) : this.setState({valueOfList: event}) ;
-// }
+import { conditions} from './Runes/Api files/condition';
+import { mechanics} from './Runes/Api files/mechanics';
+import { champs, spells, equips, relics} from './Runes/Api files/champs';
+import {abilities} from './Runes/Api files/abilities';
+import {champAbilities} from './Runes/Api files/champAbilities';
 
 function updateState(valueOfList){
 	this.setState({valueOfList})
@@ -136,13 +135,14 @@ class App extends Component {
 	render() {
         // store the data of the clicked list in populatedData
         let populatedData = this.state[this.state.valueOfList];
+        
 		return (
 		<div className="App">
 			<header className="App-header">
                 <h1 className="App-title">PoxRaze</h1>
                 <span>The PoxNora Search Engine</span>
 			</header>    
-
+        
 			<div id='placement'>
                 {/* the displayed information will be organized into lists of runes that share similarities. */}
                 {/* currently lists can only be organized by "Name" of rune and the value of the list*/}
@@ -225,7 +225,7 @@ class Rune extends Component{
     }
 
     buildRunes(){
-        const {eachRune, index, display, toggleRunes, abilities, sortBy} = this.props;
+        const {eachRune, index, display, toggleRunes, abilities, sortBy, toggleAll} = this.props;
         const { noraCost } = this.state;
 
         const nameLevel = (
@@ -377,7 +377,7 @@ class Rune extends Component{
         }
 
         const CollapsedRune = (
-            !display 
+            !display && !toggleAll
             ?
                 <div key={eachRune.name} className='collapsedRune clickable' onClick={() => {toggleRunes(index)}}>
                     <div className='name' style={{gridArea: 'name'}}>Name: <span>{nameLevel}</span></div>
@@ -414,10 +414,11 @@ class Runes extends Component {
         super(props);
 
         this.state = {
-            display: Array(props.displayData).fill(false),
+            display: [],
             currentPage: 1,
             sortBy: 'name',
-            toggled: false
+            toggled: false,
+            toggleAll: false
         };
         
         this.handleClick = this.handleClick.bind(this);
@@ -443,7 +444,7 @@ class Runes extends Component {
     }
 
     render(){
-        const {currentPage, display, sortBy, toggled} = this.state;
+        const {currentPage, display, sortBy, toggled, toggleAll} = this.state;
         const {displayData, displayListName, abilities, displayNumber} = this.props;
         let theDisplayNumber = displayNumber.current ? displayNumber.current.value : 20;
         const lastIndex = currentPage * theDisplayNumber;
@@ -451,12 +452,15 @@ class Runes extends Component {
         const currentRunes = displayData.slice(firstIndex, lastIndex);
 
         const renderRunes = (item, i) => {
-            return <div key={i} className={`RuneBox ${displayListName}`}>
+            //item is an object containing all the information for a rune
+            //i is the runes id, cant find the reason for that
+            return <div key={item.id ? item.id : item.key} className={`RuneBox ${displayListName}`}>
                 <Rune
                     key={item.id ? item.id : item.key}
                     eachRune={item}  
                     index={i} 
                     display={display[i]}
+                    toggleAll={toggleAll}
                     toggleRunes={this.toggleRunes.bind(this)}
                     abilities={abilities}
                     sortBy={this.sortBy.bind(this)}
@@ -466,10 +470,12 @@ class Runes extends Component {
 
         const expandAll = <button 
             key="expandAll" 
-            className='expandAll' 
+            className='expandAll'
             onClick={() => this.setState({
-                display: [...Array(displayData.length+displayData.length)].map(() => !display[0] ? true : false)
-            })}>Expand All
+                toggleAll: !toggleAll
+            })}
+        >
+                Expand All
         </button>
         
         const pageNumbers = [];
@@ -507,18 +513,19 @@ class Runes extends Component {
         return <div ref='placement' className='runesPlacement' id="runesPlacement">
             {expandAll}
             {renderPageNumbers}
-            {<FlatList
-                list={currentRunes}
-                renderItem={renderRunes}
-                renderWhenEmpty={() => 
-                    <div key={'Empty List'} className="RunesErrorMessage emptyList">
-                        <h3>No Runes Found</h3>
-                        
-                        <span>Select a "Rune" button, a valid page number, or try and broaden your search </span>
-                    </div>}
-                
-                sortBy={[{key: sortBy, descending: toggled}]}
-            />}
+
+                {<FlatList
+                    list={currentRunes}
+                    renderItem={renderRunes}
+                    renderWhenEmpty={() => 
+                        <div key={'Empty List'} className="RunesErrorMessage emptyList">
+                            <h3>No Runes Found</h3>
+                            
+                            <span>Select a "Rune" button, a valid page number, or try and broaden your search </span>
+                        </div>}
+                    sortBy={[{key: sortBy, descending: toggled}]}
+                />} 
+           
             
         </div>
     }
@@ -691,6 +698,8 @@ class RunesList extends React.Component {
             displayNumber: new React.createRef(),
             faction: '',
             races: '',
+            classes: '',
+            rarity: '',
         }
 
         updateSearch = updateSearch.bind(this);
@@ -708,11 +717,23 @@ class RunesList extends React.Component {
         })
     }
 
+    updateClass(event){
+        this.setState({
+            classes: event.target.value
+        })
+    }
+
+    updateRarity(event){
+        this.setState({
+            rarity: event.target.value
+        })
+    }
+
     render(){
-        let filtered, filteredByStartingAbilities, filteredByName, filteredByAbilityUpgrades, filteredByRace, filteredByFaction, advancedFilter = [];
+        let filtered, filteredByStartingAbilities, filteredByName, filteredByAbilityUpgrades, filteredByDropdown, filteredByRace, advancedFilter = [];
         let abilityUpgrades, filteredByDescription;
 
-        const {displayData, displayListName, abilities} = this.props, {search, displayNumber, faction, races} = this.state
+        const {displayData, displayListName, abilities} = this.props, {search, displayNumber, faction, races, classes, rarity} = this.state
         
         function advancedSearchFilter(data, state, abilityLocation){
             filtered = data.filter(
@@ -729,33 +750,42 @@ class RunesList extends React.Component {
             )
         }
 
-        try {
-            function filterFaction(data, state){
-                return filteredByFaction = data.filter(value => value.factions.includes(state));
+        try{
+            function dropDownFilter(data){
+                return filteredByDropdown = data.filter(
+                    value =>  
+                        (faction !== '' ? value.factions?.includes(faction) : value)
+                        &&
+                        (races !== '' && value.races ? value.races?.includes(races) : value)
+                        &&
+                        (classes !== '' && value.classes ? value.classes?.includes(classes) : value)
+                        &&
+                        (rarity !== '' && value.rarity ? value.rarity?.includes(rarity) : value)
+                );
             }
 
-            function filterRace(data, state){
-                filteredByRace = data.filter( value => value.races ? value.races.includes(state) : '');
-                
-                return filteredByRace
-            }
-            
             function filterData(data, state){
+                // wait for search condition of at least 3 characters
+                // if the search condition starts with an ! wait for at least 5 characters
                 if(state.length < 3){
                     return filtered = data;
                 }else if(state[0] === '!' && state.length < 5){
                     return filtered = data;
-                }else if(state[0] === '!' && state.length >= 5 && (displayListName === 'listOfSpells' || displayListName === 'listOfRelics' || displayListName === 'listOfEquips' )){
+                }
+                
+                else if(state[0] === '!' && state.length >= 5 && (displayListName === 'listOfSpells' || displayListName === 'listOfRelics' || displayListName === 'listOfEquips' )){
                     advancedFilter = state.slice(2);
                     advancedSearchFilter(data, state, 'description');
-
                     return filtered;
-                }else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfAbilities'){
+                }
+                
+                else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfAbilities'){
                     advancedFilter = state.slice(2);
                     advancedSearchFilter(data, state, 'short_description');
-
                     return filtered;
-                }else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfChampions'){
+                }
+                
+                else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfChampions'){
                     advancedFilter = state.slice(2);
 
                     filtered = data.filter(
@@ -805,22 +835,11 @@ class RunesList extends React.Component {
             }
             
             if(displayData !== undefined || displayData !== any || displayData !== null){
-                if(faction !== '' && races !== '' && displayListName !== "listOfConditions" && displayListName !== "listOfMechanics" && displayListName !== "listOfAbilities"){
-                    filterFaction(displayData, faction);
-                    filterRace(filteredByFaction, races);
-                    filterData(filteredByRace.filter((value, index, self) => 
-                        index === self.findIndex(x => (
-                            value.id === x.id
-                        ))
-                    ), search);
-                }else if(faction !== '' && displayListName !== "listOfConditions" && displayListName !== "listOfMechanics" && displayListName !== "listOfAbilities"){
-                    filterFaction(displayData, faction);
-                    filterData(filteredByFaction, search);
-                }else if(races !== ''){
-                    filterRace(displayData, races);
-                    filterData(filteredByRace, search);
+                if(displayListName !== "listOfConditions" && displayListName !== "listOfMechanics" && displayListName !== "listOfAbilities"){
+                    dropDownFilter(displayData);
+                    filterData(filteredByDropdown, search);
                 }else{
-                    filterData(displayData, search);
+                    filterData(displayData, search)
                 }
             }
         } catch (error) {
@@ -838,7 +857,9 @@ class RunesList extends React.Component {
                     
                         <label className="searchLabel" htmlFor="nameSearchField">Search Here: </label>
                         <input type="text" className="searchField" id="nameSearchField" value={search} onChange={updateSearch.bind(this)} ></input>
-
+                        
+                        <br/>
+                        
                         <label className="searchLabel" htmlFor="factions">Faction:</label>
                         <select name="Faction" id='factions' onChange={this.updateFaction.bind(this)} defaultValue="">
                             <option value="" >All Factions</option>
@@ -908,6 +929,41 @@ class RunesList extends React.Component {
                             <option value="Yeti">Yeti</option>
                             <option value="Zombie">Zombie</option>
                         </select>
+
+                        <label className="searchLabel" htmlFor="classes">Classes:</label>
+                        <select name='classes' id='classes' onChange={this.updateClass.bind(this)} defaultValue="">
+                            <option value="">All Classes</option>
+                            <option value="Archer">Archer</option>
+                            <option value="Bard">Bard</option>
+                            <option value="Brute">Brute</option>
+                            <option value="Crone">Crone</option>
+                            <option value="Cultist">Cultist</option>
+                            <option value="Demi-God">Demi-God</option>
+                            <option value="Druid">Druid</option>
+                            <option value="Knight">Knight</option>
+                            <option value="Monk">Monk</option>
+                            <option value="Paladin">Paladin</option>
+                            <option value="Priest">Priest</option>
+                            <option value="Ranger">Ranger</option>
+                            <option value="Rogue">Rogue</option>
+                            <option value="Shaman">Shaman</option>
+                            <option value="Tinkerer">Tinkerer</option>
+                            <option value="Wizard">Wizard</option>
+                            <option value="Warrior">Warrior</option>
+                            <option value="Witch">Witch</option>
+                        </select>
+
+                        <label className="searchLabel" htmlFor="rarity">Rarity:</label>
+                        <select name='rarity' id='rarity' onChange={this.updateRarity.bind(this)} defaultValue="">
+                            <option value="">All Rarities</option>
+                            <option value="COMMON">Common</option>
+                            <option value="UNCOMMON">Uncommon</option>
+                            <option value="RARE">Rare</option>
+                            <option value="EXOTIC">Exotic</option>
+                            <option value="LIMITED">Limited</option>
+                            <option value="LEGENDARY">Legendary</option>
+                        </select>
+                        
                     </div>
                      
                     <Runes 
