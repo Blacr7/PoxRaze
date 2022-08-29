@@ -2,6 +2,7 @@
   "name": "poxraze",
   "version": "0.1.0",
   "private": false,
+  "homepage": ".",
   "dependencies": {
     "@types/react": "^16.9.19",
     "ajv": "^6.12.6",

@@ -245,6 +245,10 @@ button:hover {
   top: 0;
 }
 
+.RuneBox .expandedRune .false {
+  color: #DF6D6D;
+}
+
 .RuneBox input {
   visibility: hidden;
 }
@@ -334,8 +338,33 @@ button:hover {
 
 .RuneBox .hash .img-full {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 332px;
+  height: 400px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.RuneBox .hash .img-full .statSection {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.RuneBox .hash .img-full .statSection .statBlock {
+  display: -ms-grid;
+  display: grid;
+  margin: 8px 10px;
 }
 
 .RuneBox .hash .image {
@@ -364,8 +393,8 @@ button:hover {
   color: yellow;
 }
 
-.listOfConditions, .listOfMechanics {
-  width: 50%;
+.listOfAll .expandedRune .hash .img-full .statSection {
+  display: none;
 }
 
 .listOfConditions .collapsedRune, .listOfMechanics .collapsedRune {
@@ -400,7 +429,7 @@ button:hover {
 }
 
 .listOfChampions .expandedRune {
-  grid: 'hash name hitPoints noraCost' 'hash factions factions factions ' 'hash tradeable forSale allowRanked' 'hash races classes deckLimit' 'hash description description description' 'hash damage speed defense' 'hash size minRng maxRng ' 'hash abilitySets abilitySets abilitySets' 'hash startingAbilities startingAbilities startingAbilities' 'hash artist . runeSet';
+  grid: 'hash name size noraCost' 'hash factions factions factions ' 'hash tradeable forSale allowRanked' 'hash races classes deckLimit' 'hash description description description' 'hash abilitySets abilitySets abilitySets' 'hash startingAbilities startingAbilities startingAbilities' 'hash artist . runeSet';
   -ms-grid-columns: minmax(35%, 35%) 1fr 1fr 1fr;
       grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
@@ -440,6 +469,10 @@ button:hover {
       grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
 
+.listOfSpells .expandedRune .hash .img-full .statSection {
+  display: none;
+}
+
 .listOfRelics .collapsedRune {
   grid: 'name . noraCost';
 }
@@ -450,6 +483,10 @@ button:hover {
       grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
 
+.listOfRelics .expandedRune .hash .img-full .dmg, .listOfRelics .expandedRune .hash .img-full .spd, .listOfRelics .expandedRune .hash .img-full .rng {
+  display: none;
+}
+
 .listOfEquips .collapsedRune {
   grid: 'name . noraCost';
 }
@@ -458,6 +495,10 @@ button:hover {
   grid: 'hash name noraCost' 'hash factions factions ' 'hash tradeable allowRanked' 'hash forSale deckLimit' 'hash description description' 'hash flavorText flavorText' 'hash artist runeSet';
   -ms-grid-columns: minmax(30%, 30%) 1fr 1fr;
       grid-template-columns: minmax(30%, 30%) 1fr 1fr;
+}
+
+.listOfEquips .expandedRune .hash .img-full .statSection {
+  display: none;
 }
 
 @media screen and (max-width: 1000px) {

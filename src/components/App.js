@@ -21,28 +21,154 @@ function updateSearch(event){
     }
 }
 
-const convertAbilityTags = (string, list) => {
+const HoverAbility = (data, dataList, isNested) => {
+    //console.log(`hover ability is ${isNested}`)
+    //create a hover box for the abilities in the game, working on limiting the recursiveness of ability within ability searches
+    
+    //determine if an ability has more than one level and apply the level number to the name of the ability
+    let name = data.level !== undefined && data.level > 0 ? 
+        <b className='name' >{data.name} ({data.level})</b> 
+        : 
+        <b className='name' >{data.name}</b>;
+
+    let description = (data) => {
+        // some abilities infinitely reference each other so they need their own special interactions
+        // or limit recursion to only a few runs
+        if(data.ability_id === 2299){
+            return <span className='description'>
+                "When this champion is within 5 spaces of a friendly champion with <b className='name'>Pride of Ailur</b>
+                <div className="abilityHover">
+                    <b className='name'>Pride of Ailur</b>
+                    <span className="noraCost">Nora Cost: 5</span>
+                    <span className="description">When this champion is within 5 spaces of a friendly champion with <b className='name'>Soul of Ailur</b> , it gains +4 DMG. This effect does not stack.</span>
+                </div>, it gains +2 DEF. This does not stack."
+            </span> 
+            
+        }if(data.ability_id === 4){
+            return <span className="description">This Champion cannot be <b>Charmed</b>, <b>Possessed</b> or <b>Distracted</b></span>
+        }if(data.ability_id === 679){
+            return <span className="description">
+                "This Unit Has -3 DMG, -1 SPD Unless It Is Within Range Of A Unit With <b className='name'>Overseer: Moga</b>
+                <div className="abilityHover">
+                    <b className='name'>Overseer: Moga</b>
+                    <span className="noraCost">Nora Cost: 1</span>
+                    <span className="description">"Friendly Units Within 4 Spaces Are Not Penalized By <b className='name'>G'hernbound</b>."</span>
+                </div>
+
+            </span>
+        }if(data.ability_id === 1364){
+            return <span className="description">
+                "Target champion within 3 spaces that has the <b className='name'>Unleash</b>
+                <div className="abilityHover">
+                    <b className='name'>Unleash</b>
+                    <span className="noraCost">Nora Cost: 4</span>
+                    <span className="description">"Friendly champions within 3 spaces gain <b className='name'>Fuel Rage</b>."</span>
+                </div>ability gains 1 AP and +1 DMG for 1 turn."
+
+            </span>
+        }if(data.ability_id === 2465){
+            return <span className="description">
+                "When this unit is deployed from the runedock, the closest opposing champion becomes
+                <div className="abilityHover">
+                    <b className='name'>Tagged</b>
+                    <span className="description">"Enemies within 5 spaces gain <b className='name'>Beset</b>
+                        <div className="abilityHover">
+                            <b className='name'>Beset</b>
+                            <span>"This champion relocates to adjacent to target enemy champion with the <b className='name'>Tagged</b> condition."</span>
+                        </div>
+                    </span>
+                </div>
+                and permanently gains <b className='name'>Hunted</b>
+                <div className="abilityHover">
+                    <b className='name'>Hunted</b>
+                    <span className="description">""This champion receives 4 more damage from champions with <b className='name'>Declare Hunted</b>."</span>
+                </div>
+            </span>
+        }if(data.ability_id === 2304){
+            return <span className="description">
+                "At the start of turn and end of each turn, if there are no friendly champions with <b className='name'>Spirit Projection</b>
+                <div className="abilityHover">
+                    <b className='name'>Spirit Projection</b>
+                    <span className="description">
+                        "When this champion is deployed and at the start of its turns, if there is no Manifestation of this unit in play, a 
+                        <b className='name'>Manifestation</b> of this unit without upgrades is summoned within 3 spaces of this champion. This ability triggers only if the champion is a Garu Medium or Spirit of the Mountain."
+                    </span>
+                </div>
+                 within 5 spaces this unit, it is destroyed."
+            </span>
+        }else{ // if a ability does not need special interactions
+            let result 
+            if(data.description){
+                result = convertAbilityTags(data.description, dataList, isNested)
+            }else if(data.shortDescription){
+                result = convertAbilityTags(data.shortDescription, dataList, isNested)
+            }else if(data.short_description){
+                result = convertAbilityTags(data.short_description, dataList, isNested)
+            }
+            return <span className='description' > 
+                {result}
+            </span>
+        } 
+    }
+
+    //<RunesList displayListName='listOfAll' displayData={allTheRunes || []} abilities={[dataList[0], dataList[1], dataList[2]]}></RunesList>
+    return <span key={data.asset_id ? data.asset_id : data.key} className="markupAbility">
+        {findAbilityIcon(data, 'small')}&nbsp;
+
+        {data.key ? [<span key={data.name + data.key} onClick={() => [updateState('listOfAll'), updateSearch(data.name)]}>{name}</span>] : name}
+        <div className='abilityHover'>
+
+            <div className='nameHidden'>{name}</div>
+            {
+                data.cooldown !== undefined 
+                ? 
+                    [
+                        <span key={'cooldown' + data.asset_id} className='cooldown' >{data.cooldown !== 0 ? 'Cooldown: ' + data.cooldown : ''}</span>, 
+                        <span key={'apCost' + data.asset_id} className='apCost' >{data.ap_cost ? 'AP cost:jrdhfhf ' + data.ap_cost : 'AP cost: ' + data.apCost}</span>,
+                        <span key={'noraCost' + data.asset_id} className='noraCost'>Nora cost: {data.cost ? data.cost : data.noraCost}</span>
+                    ] 
+                : 
+                    ''
+            }
+            
+            {description(data)}
+        </div>
+    </span>
+}
+
+const convertAbilityTags = (string, list, nested) => {
     //convert ability, condition, and mechanic markup into searchable text,
     //then rune that text through the Ability class to find the relevant abilities
 
-    let id = 0, reg = new RegExp(/(<.*?>*<.*?>)/), splitString = string.split(reg), lookFor = 'value';
-    
+    let id = 0, abilityName = '', isNested = !nested;
+    let reg = new RegExp(/(<.*?>*<.*?>)/), splitString = string.split(reg), lookFor = 'value';
+    const nestedAbility = (data, key) => <div key={key} className='nestedAbility name'>{data}</div>
+
     return(<span className="markupText">
         {
-            splitString.reduce((prev, current, i) => {
+            splitString.reduce((prevString, currentString, i) => {
                 if(!i){
-                    return [current];
+                    return [currentString];
 				}
                 //id is the value found between e= and > 
-                id = current.split(/e=(.*?)>/)[1];
-                return prev.concat(current.includes(lookFor) ? (
-                    <Ability 
-                        key={`${id}  ${i}`} 
-                        value={id.match(/\d+/g) === null ? id : Number(id)} 
-                        dataList={list}
-                        failedToFind={splitString.filter(value => value.includes(id))}
-                    />
-                    ) : current);
+                id = currentString.split(/e=(.*?)>/)[1];
+                abilityName = currentString.split(/>(.*?)</)[1];
+                
+                if(currentString.includes(lookFor) && isNested){
+                    return prevString.concat(
+                        <Ability 
+                            key={`${id}  ${i}`} 
+                            value={id.match(/\d+/g) === null ? id : Number(id)} 
+                            dataList={list}
+                            inCaseFailedToFind={splitString.filter(value => value.includes(id))}
+                        />
+                    )
+                }else if(currentString.includes(lookFor) && !isNested){
+                    return prevString.concat(nestedAbility(abilityName, id));
+                }else {
+                    return prevString.concat(currentString);
+                }
+                
             }, [])
         }
 	</span>)
@@ -225,7 +351,7 @@ class Rune extends Component{
     }
 
     buildRunes(){
-        const {eachRune, index, display, toggleRunes, abilities, sortBy, toggleAll} = this.props;
+        const {eachRune, runeList, index, display, toggleRunes, abilities, sortBy, toggleAll} = this.props;
         const { noraCost } = this.state;
 
         const nameLevel = (
@@ -306,7 +432,7 @@ class Rune extends Component{
     
             const TrueToYes = (item) => { // convert the true or false items in a rune to something more readable 
                 return <li key={key++} className={item} style={{gridArea: item}}>
-                            {item}: <span>{eachRune[item] ? 'Yes' : 'No'}</span>
+                            {item}: <span className={`${eachRune[item]}`}>{eachRune[item] ? 'Yes' : 'No'}</span>
                         </li>;
             }
     
@@ -331,13 +457,6 @@ class Rune extends Component{
                             <span className="largeIcon">{findAbilityIcon(eachRune, 'large')}</span>
                         </li>;
             }
-    
-            const Rarity = (item) => { // determine the rarity of the current rune
-                // currently deprecated in favor of the frameRarity
-                return <li key={key++} className={item} style={{gridArea: item}}>
-                            {item}: <span className={eachRune[item]}>{eachRune[item]}</span>
-                        </li>;
-            }
 
             const BuildImageFrame = (item) => {// generate the IMG for runes based on its hash value from the API, you can determine the size from ".../images/runes/(whatever size you want)/..."
                 // sizes for the hash include: lg, med, sm (not all runes have a sm size), hash also determines the sprite of the rune
@@ -346,20 +465,50 @@ class Rune extends Component{
                 return 	<li key={key++} className={item} style={{gridArea: item}}>
                     
                         <div className="img-full clickable"  onClick={() => {displayToggle(index)}}>
-                            <img className="image rune" loading="lazy" src={"https://d2aao99y1mip6n.cloudfront.net/images/runes/lg/" + eachRune[item] + ".jpg"} alt="Runes" />
+                            <img className="image rune" loading="lazy" src={"https://d2aao99y1mip6n.cloudfront.net/images/runes/lg/" + eachRune.hash + ".jpg"} alt="Runes" />
                             <img className="image frame" loading='lazy' src='https://d2aao99y1mip6n.cloudfront.net/_themes/global/frames/large/front/1.gif' alt='Rune Frame' />
-                            <img className="image frameRarity" loading='lazy' src={`Images/${eachRune['rarity']}.gif`} alt='Rarity Frame'/>
+                            <div className='statSection'>
+                                <div className='statBlock dmg'>
+                                    <img src='Images/dmgStat.png'></img>
+                                    {eachRune.damage}
+                                </div>
+                                <div className='statBlock spd'>
+                                    <img src='Images/spdStat.png'></img>
+                                    {eachRune.speed}
+                                </div>
+                                <div className='statBlock rng'>
+                                    <img src='Images/rngStat.png'></img>
+                                    {`${eachRune.minRng} - ${eachRune.maxRng}`}
+                                </div>
+                                <div className='statBlock def'>
+                                    <img src='Images/defStat.png'></img>
+                                    {eachRune.defense}
+                                </div>
+                                <div className='statBlock hp'>
+                                    <img src='Images/hpStat.png'></img>
+                                    {eachRune.hitPoints}
+                                </div>
+                            </div>
+                            
+                            <img className="image frameRarity" loading='lazy' src={`Images/${eachRune.rarity}.gif`} alt='Rarity Frame'/>
                         </div>
+
+                        
                     </li>;
             }
     
             const RestOf = (item) => { // generate the rest of the items in the rune that don't require special code
+                if(item === 'damage' || item === 'speed' || item === 'defense' || item === 'hitPoints'
+                || item === 'minRng' || item === 'maxRng' || item === 'rarity' || item === 'id'){
+                    return
+                }
                 return <li key={key++} className={item} style={{gridArea: item}} onClick={sortBy}>
                             {item}: <span className={item}>{eachRune[item]}</span>
                         </li>;
             }
 
-            return <div key={eachRune.name} className='expandedRune' id={eachRune.name}>{ Object.keys(eachRune).map((item) => {
+            return <div key={eachRune.name} className={`expandedRune`} id={eachRune.name}>{ Object.keys(eachRune).map((item) => {
+                    
                     if(item === "abilitySets"){return AbilitySets(item);}
                     if(item === "startingAbilities"){ return  StartingAbilities(item);}
                     if(Array.isArray(eachRune[item])){return IsAnArray(item);}
@@ -368,7 +517,6 @@ class Rune extends Component{
                     if(item === 'tradeable' || item === 'allowRanked' || item === 'forSale'){ return	TrueToYes(item);}
                     if(item === "description" || item === "shortDescription" || item === "short_description"){ return Description(item);}
                     if(item === "name"){collapsedRune = Name(item); return collapsedRune}
-                    if(item === 'rarity'){ return Rarity(item);}
                     if(item === 'icon_name' || item === 'iconName'){ return IconName(item)}
                     else{ return RestOf(item)}
                     })
@@ -379,16 +527,22 @@ class Rune extends Component{
         const CollapsedRune = (
             !display && !toggleAll
             ?
-                <div key={eachRune.name} className='collapsedRune clickable' onClick={() => {toggleRunes(index)}}>
-                    <div className='name' style={{gridArea: 'name'}}>Name: <span>{nameLevel}</span></div>
-                    {eachRune.noraCost && eachRune.cost ? 
-                        <div className='noraCost' style={{gridArea: 'noraCost'}}>Nora Cost: <span>{eachRune.noraCost}</span></div>
-                        :
-                        ''
-                    }
+                <div className={runeList}>
+                    <div key={eachRune.name} className='collapsedRune clickable' onClick={() => {toggleRunes(index)}}>
+                        <div className='name' style={{gridArea: 'name'}}>Name: <span>{nameLevel}</span></div>
+                        {eachRune.noraCost && eachRune.cost ? 
+                            <div className='noraCost' style={{gridArea: 'noraCost'}}>Nora Cost: <span>{eachRune.noraCost}</span></div>
+                            :
+                            ''
+                        }
+                    </div>
                 </div>
+                
             :
-                expandedResult(toggleRunes)
+                <div className={runeList}>
+                    {expandedResult(toggleRunes)}
+                </div>
+                
         )
 
         return CollapsedRune
@@ -454,10 +608,11 @@ class Runes extends Component {
         const renderRunes = (item, i) => {
             //item is an object containing all the information for a rune
             //i is the runes id, cant find the reason for that
-            return <div key={item.id ? item.id : item.key} className={`RuneBox ${displayListName}`}>
+            return <div key={item.id ? item.id : item.key} className={`RuneBox`}>
                 <Rune
                     key={item.id ? item.id : item.key}
-                    eachRune={item}  
+                    eachRune={item}
+                    runeList={displayListName}
                     index={i} 
                     display={display[i]}
                     toggleAll={toggleAll}
@@ -530,132 +685,9 @@ class Runes extends Component {
         </div>
     }
 }
-
 class Ability extends React.Component {
+    
     // props are this.props.value: the unique identifer for abilities, conditions, and mechanics, this.props.datalist: the full list of abilities, conditions, and mechanics
-    HoverAbility(data, dataList){
-        //create a hover box for the abilities in the game, working on limiting the recursiveness of ability within ability searches
-        
-        //determine if an ability has more than one level and apply the level number to the name of the ability
-        let name = data.level !== undefined && data.level > 0 ? 
-            <b className='name' >{data.name} ({data.level})</b> 
-            : 
-            <b className='name' >{data.name}</b>;
-    
-        let description = (data) => {
-            // some abilities infinitely reference each other so they need their own special interactions
-            // or limit recursion to only a few runs
-            if(data.ability_id === 2075){
-                return <span className='description'>
-                    "When this champion is within 5 spaces of a friendly champion with <b className='name'>Soul of Ailur</b>
-                    <div className="abilityHover">
-                        <b className='name'>Soul of Ailur</b>
-                        <span className="noraCost">Nora Cost: 3</span>
-                        <span className="description">When this champion is within 5 spaces of a friendly champion with <b className='name'>Pride of Ailur</b> , it gains +2 DEF. This effect does not stack.</span>
-                    </div>, it gains +4 DMG. This does not stack."
-                </span>
-            }if(data.ability_id === 2299){
-                return <span className='description'>
-                    "When this champion is within 5 spaces of a friendly champion with <b className='name'>Pride of Ailur</b>
-                    <div className="abilityHover">
-                        <b className='name'>Pride of Ailur</b>
-                        <span className="noraCost">Nora Cost: 5</span>
-                        <span className="description">When this champion is within 5 spaces of a friendly champion with <b className='name'>Soul of Ailur</b> , it gains +4 DMG. This effect does not stack.</span>
-                    </div>, it gains +2 DEF. This does not stack."
-                </span> 
-                
-            }if(data.ability_id === 4){
-                return <span className="description">This Champion cannot be <b>Charmed</b>, <b>Possessed</b> or <b>Distracted</b></span>
-            }if(data.ability_id === 679){
-                return <span className="description">
-                    "This Unit Has -3 DMG, -1 SPD Unless It Is Within Range Of A Unit With <b className='name'>Overseer: Moga</b>
-                    <div className="abilityHover">
-                        <b className='name'>Overseer: Moga</b>
-                        <span className="noraCost">Nora Cost: 1</span>
-                        <span className="description">"Friendly Units Within 4 Spaces Are Not Penalized By <b className='name'>G'hernbound</b>."</span>
-                    </div>
-    
-                </span>
-            }if(data.ability_id === 1364){
-                return <span className="description">
-                    "Target champion within 3 spaces that has the <b className='name'>Unleash</b>
-                    <div className="abilityHover">
-                        <b className='name'>Unleash</b>
-                        <span className="noraCost">Nora Cost: 4</span>
-                        <span className="description">"Friendly champions within 3 spaces gain <b className='name'>Fuel Rage</b>."</span>
-                    </div>ability gains 1 AP and +1 DMG for 1 turn."
-    
-                </span>
-            }if(data.ability_id === 2465){
-                return <span className="description">
-                    "When this unit is deployed from the runedock, the closest opposing champion becomes
-                    <div className="abilityHover">
-                        <b className='name'>Tagged</b>
-                        <span className="description">"Enemies within 5 spaces gain <b className='name'>Beset</b>
-                            <div className="abilityHover">
-                                <b className='name'>Beset</b>
-                                <span>"This champion relocates to adjacent to target enemy champion with the <b className='name'>Tagged</b> condition."</span>
-                            </div>
-                        </span>
-                    </div>
-                    and permanently gains <b className='name'>Hunted</b>
-                    <div className="abilityHover">
-                        <b className='name'>Hunted</b>
-                        <span className="description">""This champion receives 4 more damage from champions with <b className='name'>Declare Hunted</b>."</span>
-                    </div>
-                </span>
-            }if(data.ability_id === 2304){
-                return <span className="description">
-                    "At the start of turn and end of each turn, if there are no friendly champions with <b className='name'>Spirit Projection</b>
-                    <div className="abilityHover">
-                        <b className='name'>Spirit Projection</b>
-                        <span className="description">
-                            "When this champion is deployed and at the start of its turns, if there is no Manifestation of this unit in play, a 
-                            <b className='name'>Manifestation</b> of this unit without upgrades is summoned within 3 spaces of this champion. This ability triggers only if the champion is a Garu Medium or Spirit of the Mountain."
-                        </span>
-                    </div>
-                     within 5 spaces this unit, it is destroyed."
-                </span>
-            }else{ // if a ability does not need special interactions
-                let result 
-                if(data.description){
-                    result = convertAbilityTags(data.description, dataList)
-                }else if(data.shortDescription){
-                    result = convertAbilityTags(data.shortDescription, dataList)
-                }else if(data.short_description){
-                    result = convertAbilityTags(data.short_description, dataList)
-                }
-                return <span className='description' > 
-                    {result}
-                </span>
-            } 
-        }
-    
-        //<RunesList displayListName='listOfAll' displayData={allTheRunes || []} abilities={[dataList[0], dataList[1], dataList[2]]}></RunesList>
-        return <span key={data.asset_id ? data.asset_id : data.key} className="markupAbility">
-            {findAbilityIcon(data, 'small')}&nbsp;
-
-            {data.key ? [<span key={data.name + data.key} onClick={() => [updateState('listOfAll'), updateSearch(data.name)]}>{name}</span>] : name}
-            <div className='abilityHover'>
-
-                <div className='nameHidden'>{name}</div>
-                {
-                    data.cooldown !== undefined 
-                    ? 
-                        [
-                            <span key={'cooldown' + data.asset_id} className='cooldown' >{data.cooldown !== 0 ? 'Cooldown: ' + data.cooldown : ''}</span>, 
-                            <span key={'apCost' + data.asset_id} className='apCost' >{data.ap_cost ? 'AP cost:jrdhfhf ' + data.ap_cost : 'AP cost: ' + data.apCost}</span>,
-                            <span key={'noraCost' + data.asset_id} className='noraCost'>Nora cost: {data.cost ? data.cost : data.noraCost}</span>
-                        ] 
-                    : 
-                        ''
-                }
-                
-                {description(data)}
-            </div>
-        </span>
-    }
-
     render(){
         try {
             const {dataList, value} = this.props
@@ -676,11 +708,11 @@ class Ability extends React.Component {
             //if no unique identifier was found return an empty string 
             //if a identifier was found run the hover ability function which will generate the ability
             if(result === undefined || result.length === 0){
-                let failedToFind = this.props.failedToFind[0].split(/<.*?>/)
-                return <span className="markupAbility"><b className='name'>{failedToFind[1]}</b></span>
+                let inCaseFailedToFind = this.props.inCaseFailedToFind[0].split(/<.*?>/)
+                return <span className="markupAbility"><b className='name'>{inCaseFailedToFind[1]}</b></span>
             }else{
                 return (
-                    this.HoverAbility(result[0], dataList)
+                    HoverAbility(result[0], dataList)
                 )
             }
         } catch (error) {
@@ -696,10 +728,10 @@ class RunesList extends React.Component {
         this.state = {
             search: '',
             displayNumber: new React.createRef(),
-            faction: '',
-            races: '',
-            classes: '',
-            rarity: '',
+            faction: 'all',
+            races: 'all',
+            classes: 'all',
+            rarity: 'all',
         }
 
         updateSearch = updateSearch.bind(this);
@@ -754,13 +786,13 @@ class RunesList extends React.Component {
             function dropDownFilter(data){
                 return filteredByDropdown = data.filter(
                     value =>  
-                        (faction !== '' ? value.factions?.includes(faction) : value)
+                        (faction !== 'all' ? value.factions?.includes(faction) : value)
                         &&
-                        (races !== '' && value.races ? value.races?.includes(races) : value)
+                        (rarity !== 'all' ? value.rarity === rarity ? value : '' : value)
                         &&
-                        (classes !== '' && value.classes ? value.classes?.includes(classes) : value)
+                        (races !== 'all' && value.races ? value.races?.includes(races) : value)
                         &&
-                        (rarity !== '' && value.rarity ? value.rarity?.includes(rarity) : value)
+                        (classes !== 'all' && value.classes ? value.classes?.includes(classes) : value)
                 );
             }
 
@@ -861,8 +893,8 @@ class RunesList extends React.Component {
                         <br/>
                         
                         <label className="searchLabel" htmlFor="factions">Faction:</label>
-                        <select name="Faction" id='factions' onChange={this.updateFaction.bind(this)} defaultValue="">
-                            <option value="" >All Factions</option>
+                        <select name="Faction" id='factions' onChange={this.updateFaction.bind(this)} defaultValue="all">
+                            <option value="all" >All Factions</option>
                             <option value="Forglar Swamp">Forglar Swamp</option>
                             <option value="Forsaken Wastes">Forsaken Wastes</option>
                             <option value="Ironfist Stronghold">Ironfist Stronghold</option>
@@ -874,8 +906,8 @@ class RunesList extends React.Component {
                         </select>
 
                         <label className="searchLabel" htmlFor="races">Races:</label>
-                        <select name='races' id='races' onChange={this.updateRace.bind(this)} defaultValue="">
-                            <option value="">All Races</option>
+                        <select name='races' id='races' onChange={this.updateRace.bind(this)} defaultValue="all">
+                            <option value="all">All Races</option>
                             <option value="Angel">Angel</option>
                             <option value="Arthropod">Arthropod</option>
                             <option value="Barbarian">Barbarian</option>
@@ -931,8 +963,8 @@ class RunesList extends React.Component {
                         </select>
 
                         <label className="searchLabel" htmlFor="classes">Classes:</label>
-                        <select name='classes' id='classes' onChange={this.updateClass.bind(this)} defaultValue="">
-                            <option value="">All Classes</option>
+                        <select name='classes' id='classes' onChange={this.updateClass.bind(this)} defaultValue="all">
+                            <option value="all">All Classes</option>
                             <option value="Archer">Archer</option>
                             <option value="Bard">Bard</option>
                             <option value="Brute">Brute</option>
@@ -954,8 +986,8 @@ class RunesList extends React.Component {
                         </select>
 
                         <label className="searchLabel" htmlFor="rarity">Rarity:</label>
-                        <select name='rarity' id='rarity' onChange={this.updateRarity.bind(this)} defaultValue="">
-                            <option value="">All Rarities</option>
+                        <select name='rarity' id='rarity' onChange={this.updateRarity.bind(this)} defaultValue="all">
+                            <option value="all">All Rarities</option>
                             <option value="COMMON">Common</option>
                             <option value="UNCOMMON">Uncommon</option>
                             <option value="RARE">Rare</option>

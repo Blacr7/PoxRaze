@@ -201,11 +201,8 @@ button {
 					border: unset;
 				}
 			}
-			
 		}
 	}
-
-	
 }
 
 .RuneBox{
@@ -229,6 +226,10 @@ button {
 			z-index: 3;
 			color: ivory;
 			top:0;
+		}
+		
+		.false{
+			color: $red;
 		}
 	}
 
@@ -313,8 +314,22 @@ button {
 
 		.img-full{
 			position: relative;
-			width: 100%;
-			height: 100%;
+			width: 332px;
+			height: 400px;
+			
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+
+			.statSection{
+				display: flex;
+				justify-content: center;
+
+				.statBlock{
+					display: grid;
+					margin: 8px 10px;
+				}
+			}
 		}
 
 		.image{
@@ -357,11 +372,18 @@ button {
 				color: yellow;
 			}
 		}
+
+		.hash{
+			.img-full{
+				.statSection{
+					display: none;
+				}
+			}
+		}
 	}
 }
 
 .listOfConditions, .listOfMechanics{
-  	width: 50%;
   
 	.collapsedRune{
 		grid: '. name .';
@@ -410,13 +432,11 @@ button {
 
 	.expandedRune{
 		grid: 
-		'hash name hitPoints noraCost'
+		'hash name size noraCost'
 		'hash factions factions factions '
 		'hash tradeable forSale allowRanked'
 		'hash races classes deckLimit'
 		'hash description description description'
-		'hash damage speed defense'
-		'hash size minRng maxRng '
 		'hash abilitySets abilitySets abilitySets'
 		'hash startingAbilities startingAbilities startingAbilities'
 		'hash artist . runeSet';
@@ -478,6 +498,15 @@ button {
 		'hash artist . runeSet';
 
 		grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+
+		.hash{
+			.img-full{
+				.statSection{
+					display: none;
+				}
+			}
+		}
+		
 	}
 }
 
@@ -497,6 +526,16 @@ button {
 		'hash artist deckLimit runeSet';
 
 		grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+
+		.hash{
+			.img-full{
+				.statSection{
+				}
+				.dmg, .spd, .rng{
+					display: none;
+				}
+			}
+		}
 	}
 }
 
@@ -516,6 +555,14 @@ button {
 		'hash artist runeSet';
 
 		grid-template-columns: minmax(30%, 30%) 1fr 1fr;
+
+		.hash{
+			.img-full{
+				.statSection{
+					display: none;
+				}
+			}
+		}
 	}
 }
 
