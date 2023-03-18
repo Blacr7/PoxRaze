@@ -9,6 +9,7 @@ import { champs, spells, equips, relics} from './Runes/Api files/champs';
 import {abilities} from './Runes/Api files/abilities';
 import {champAbilities} from './Runes/Api files/champAbilities';
 
+
 function updateState(valueOfList){
 	this.setState({valueOfList})
 }
@@ -95,7 +96,7 @@ class App extends Component {
                 <h1 className="App-title">PoxRaze</h1>
                 <span>The PoxNora Search Engine</span>
                 <div className='toolTipContainer'>
-                  <span className='toolTip' data-tooltip={toolTip[Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0)) + Math.ceil(0))]}>?</span>  
+                  <span className='toolTip' data-tooltip={toolTip[Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0)) + Math.ceil(0))]}>?</span>
                 </div>
                 
 			</header>    
@@ -306,7 +307,7 @@ class Rune extends Component{
                             
                             <div className='statSection'>
                                 <div className='statBlock dmg' >
-                                    <img className='damage' onClick={sortBy} src='Images/dmgStat.png'></img>
+                                    <img className='damage' onClick={sortBy} src='./Images/dmgStat.png'></img>
                                     {eachRune.damage}
                                 </div>
                                 <div className='statBlock spd'>
