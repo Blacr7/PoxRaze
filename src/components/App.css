@@ -8,7 +8,8 @@
   position: relative;
 }
 
-body {
+body,
+html {
   margin: 0;
   height: 100%;
   width: 100%;
@@ -24,29 +25,62 @@ html {
 .App {
   text-align: center;
   min-height: 100vh;
-  display: -ms-grid;
   display: grid;
-  -ms-grid-rows: auto 1fr auto;
-      grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
 }
-
 .App .App-header {
   height: 40vh;
   margin: 0 0 1rem;
   color: #ffffff;
   background-color: #0A0A0A;
   overflow: hidden;
-  display: -ms-grid;
   display: grid;
-  -ms-flex-line-pack: center;
-      align-content: center;
+  align-content: center;
 }
-
 .App .App-header .App-title {
   font-size: 5em;
   font-weight: bolder;
 }
-
+.App .App-header .toolTipContainer {
+  margin: 1em;
+}
+.App .App-header .toolTipContainer .toolTip {
+  padding: 5px 12px;
+  border-radius: 50%;
+}
+.App .App-header .toolTipContainer .toolTip:hover {
+  background-color: #323E3F;
+  cursor: pointer;
+}
+.App .App-header .toolTipContainer .toolTip:hover::before, .App .App-header .toolTipContainer .toolTip:hover::after {
+  opacity: 1;
+}
+.App .App-header .toolTipContainer .toolTip::before, .App .App-header .toolTipContainer .toolTip::after {
+  position: absolute;
+  left: 50%;
+  opacity: 0;
+  transition: all ease 0.5s;
+}
+.App .App-header .toolTipContainer .toolTip::before {
+  content: "";
+  border-width: 0px 8px 10px 8px;
+  border-style: solid;
+  border-color: transparent transparent #323E3F transparent;
+  margin-left: -8px;
+  top: 35px;
+}
+.App .App-header .toolTipContainer .toolTip::after {
+  content: attr(data-tooltip);
+  background-color: #323E3F;
+  font-size: 12px;
+  width: 200px;
+  margin-left: -100px;
+  top: 35px;
+  padding: 10px;
+  border-radius: 1em;
+  color: #eee;
+  transform: translateY(10%);
+}
 .App .appFooter {
   bottom: 0;
   height: 4em;
@@ -54,18 +88,10 @@ html {
   margin: 1em auto;
   width: 95%;
   color: #ffffff;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-between;
 }
-
 .App .appFooter a {
   color: white;
   font-style: italic;
@@ -76,14 +102,12 @@ button {
   border: 0.1em solid #ffffff;
   background: #323E3F;
   color: #ffffff;
-  padding: .5em;
+  padding: 0.5em;
   margin: 1em;
   cursor: pointer;
   font-size: 1.5em;
-  -webkit-transition: all .5s;
-  transition: all .5s;
+  transition: all 0.5s;
 }
-
 button:hover {
   background: #ffffff;
   color: #323E3F;
@@ -95,39 +119,28 @@ button:hover {
 
 .expandAll {
   display: block;
-  margin: .6em auto;
+  margin: 0.6em auto;
 }
 
 .pageNumbers {
   color: #ffffff;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   list-style: none;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
   width: 80%;
   margin: auto;
 }
-
 .pageNumbers li {
-  padding: .5em;
+  padding: 0.5em;
   font-size: 1.2em;
   cursor: pointer;
 }
-
 .pageNumbers .startOf {
   text-decoration: underline;
   pointer-events: none;
 }
-
 .pageNumbers .activeNumber {
   color: red;
 }
@@ -140,79 +153,116 @@ button:hover {
 .markupAbility {
   position: relative;
   display: inline-block;
+}
+.markupAbility img, .markupAbility .name {
   cursor: pointer;
 }
-
 .markupAbility .abilityIcon {
-  padding: 0 0 0 .5em;
+  margin: 0 0.5em;
 }
-
 .markupAbility .name {
   font-size: 1em;
-  padding: 0 .1em;
+  padding: 0 0.1em;
   color: #9fbe52;
 }
-
-.markupAbility .abilityHover {
+.markupAbility .abilityHoverContainer {
   position: absolute;
-  visibility: hidden;
-  font-size: 1rem;
+}
+.markupAbility .abilityHover {
+  position: relative;
+  display: none;
+  font-size: 0.8em;
+  left: -30%;
   width: 300px;
-  left: -50%;
-  top: 30px;
   color: #ffffff;
   text-shadow: 0 0 2px #000;
   margin: 2px 0;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: #000;
-  background-color: #191919;
+  background-color: rgb(25, 25, 25);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#000));
   border-radius: 3px;
-  -webkit-box-shadow: 0 0 3px #555;
-          box-shadow: 0 0 3px #555;
+  box-shadow: 0 0 3px #555;
   z-index: 5;
 }
-
-.markupAbility .abilityHover .cooldown, .markupAbility .abilityHover .apCost, .markupAbility .abilityHover .noraCost {
+.markupAbility .abilityHover .cooldown,
+.markupAbility .abilityHover .apCost,
+.markupAbility .abilityHover .noraCost {
   color: #4b7bcf;
   width: 100%;
   font-size: unset;
   font-weight: unset;
 }
-
 .markupAbility .abilityHover .description {
-  font-size: .7rem;
+  font-size: 0.7em;
+  position: static;
 }
-
+.markupAbility:hover .markupAbility,
+.markupAbility:hover .markupText, .markupAbility:focus .markupAbility,
+.markupAbility:focus .markupText {
+  position: static;
+}
 .markupAbility:hover .abilityHover, .markupAbility:focus .abilityHover {
-  display: -ms-grid;
   display: grid;
-  visibility: visible;
 }
-
-.markupAbility:hover .abilityHover .cooldown, .markupAbility:hover .abilityHover .apCost, .markupAbility:hover .abilityHover .noraCost, .markupAbility:focus .abilityHover .cooldown, .markupAbility:focus .abilityHover .apCost, .markupAbility:focus .abilityHover .noraCost {
+.markupAbility:hover .abilityHover .cooldown,
+.markupAbility:hover .abilityHover .apCost,
+.markupAbility:hover .abilityHover .noraCost, .markupAbility:focus .abilityHover .cooldown,
+.markupAbility:focus .abilityHover .apCost,
+.markupAbility:focus .abilityHover .noraCost {
   color: #4b7bcf;
   width: 100%;
   font-size: unset;
   font-weight: unset;
 }
-
 .markupAbility:hover .abilityHover .description, .markupAbility:focus .abilityHover .description {
-  font-size: .7rem;
+  font-size: 0.8rem;
 }
-
-.markupAbility:hover .abilityHover .abilityHover, .markupAbility:focus .abilityHover .abilityHover {
-  left: unset;
+.markupAbility:hover .abilityHover .description .markupAbility:nth-child(1) .abilityHover, .markupAbility:focus .abilityHover .description .markupAbility:nth-child(1) .abilityHover {
+  left: -100%;
+  top: 0%;
+}
+.markupAbility:hover .abilityHover .description .markupAbility:nth-child(2) .abilityHover, .markupAbility:focus .abilityHover .description .markupAbility:nth-child(2) .abilityHover {
+  left: 0%;
+  top: 100%;
+}
+.markupAbility:hover .abilityHover .description .markupAbility:nth-child(3) .abilityHover, .markupAbility:focus .abilityHover .description .markupAbility:nth-child(3) .abilityHover {
+  left: -100%;
   top: unset;
-  bottom: 5px;
-  margin: 1em 0;
-  position: relative;
+  bottom: 0%;
+}
+.markupAbility:hover .abilityHover .abilityHoverContainer, .markupAbility:focus .abilityHover .abilityHoverContainer {
+  position: static;
+  display: block;
+}
+.markupAbility:hover .abilityHover .abilityHover, .markupAbility:focus .abilityHover .abilityHover {
+  position: absolute;
   border: 2px solid whitesmoke;
   border-style: inset;
 }
-
 .markupAbility:hover .abilityHover .abilityHover:hover, .markupAbility:focus .abilityHover .abilityHover:hover {
-  border: unset;
+  opacity: 0;
+}
+
+.Ability0 .markupAbility:hover .abilityHover .description {
+  font-size: 0.7rem;
+}
+.Ability0 .markupAbility:hover .abilityHover .description .markupAbility:nth-child(1) .abilityHover {
+  left: 100%;
+  top: 0%;
+}
+.Ability0 .markupAbility:hover .abilityHover .description .markupAbility:nth-child(3) .abilityHover {
+  left: 0%;
+  top: 100%;
+}
+.Ability0 .markupAbility:hover .abilityHover .description .markupAbility:nth-child(3) .abilityHover {
+  left: -100%;
+  top: unset;
+  bottom: 0%;
+}
+
+.nestedAbility {
+  display: inline-block;
 }
 
 .RuneBox {
@@ -220,342 +270,365 @@ button:hover {
   color: #ffffff;
   border: solid rgba(255, 255, 255, 0.25);
   width: 90%;
-  margin: .5em auto;
-  display: -ms-grid;
+  margin: 0.5em auto;
   display: grid;
 }
-
-.RuneBox .collapsedRune, .RuneBox .expandedRune {
-  display: -ms-grid;
+.RuneBox .collapsedRune,
+.RuneBox .expandedRune {
   display: grid;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  align-items: center;
+  justify-content: space-around;
 }
-
 .RuneBox .expandedRune {
   min-height: 500px;
 }
-
 .RuneBox .expandedRune .namehash {
   z-index: 3;
   color: ivory;
   top: 0;
 }
-
 .RuneBox .expandedRune .false {
   color: #DF6D6D;
 }
-
 .RuneBox input {
   visibility: hidden;
 }
-
 .RuneBox .clickable {
   cursor: pointer;
 }
-
 .RuneBox li {
   list-style: none;
-  padding: .5em;
+  padding: 0.5em;
   text-transform: capitalize;
+}
+.RuneBox li .name, .RuneBox li .noraCost, .RuneBox li .size, .RuneBox li .deckLimit, .RuneBox li .cooldown, .RuneBox li .artist, .RuneBox li .runeSet {
   cursor: pointer;
 }
-
-.RuneBox .tradeable, .RuneBox .forSale, .RuneBox .allowRanked, .RuneBox .races, .RuneBox .classes, .RuneBox .factions, .RuneBox .classes, .RuneBox .description {
+.RuneBox .tradeable,
+.RuneBox .forSale,
+.RuneBox .allowRanked,
+.RuneBox .races,
+.RuneBox .classes,
+.RuneBox .factions,
+.RuneBox .classes,
+.RuneBox .description {
   cursor: revert;
 }
-
-.RuneBox .tradeable li, .RuneBox .forSale li, .RuneBox .allowRanked li, .RuneBox .races li, .RuneBox .classes li, .RuneBox .factions li, .RuneBox .classes li, .RuneBox .description li {
+.RuneBox .tradeable li,
+.RuneBox .forSale li,
+.RuneBox .allowRanked li,
+.RuneBox .races li,
+.RuneBox .classes li,
+.RuneBox .factions li,
+.RuneBox .classes li,
+.RuneBox .description li {
   cursor: revert;
 }
-
-.RuneBox .races, .RuneBox .classes, .RuneBox .factions, .RuneBox .startingAbilities {
+.RuneBox .races,
+.RuneBox .classes,
+.RuneBox .factions,
+.RuneBox .startingAbilities {
   text-transform: capitalize;
 }
-
-.RuneBox .races ul, .RuneBox .classes ul, .RuneBox .factions ul, .RuneBox .startingAbilities ul {
+.RuneBox .races ul,
+.RuneBox .classes ul,
+.RuneBox .factions ul,
+.RuneBox .startingAbilities ul {
   display: inline;
 }
-
-.RuneBox .races ul li, .RuneBox .classes ul li, .RuneBox .factions ul li, .RuneBox .startingAbilities ul li {
+.RuneBox .races ul li,
+.RuneBox .classes ul li,
+.RuneBox .factions ul li,
+.RuneBox .startingAbilities ul li {
   display: inline;
   padding: unset;
 }
-
-.RuneBox .id, .RuneBox .rarity {
+.RuneBox .startingAbilities {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.RuneBox .id,
+.RuneBox .rarity {
   display: none;
 }
-
-.RuneBox .name, .RuneBox .noraCost {
+.RuneBox .name,
+.RuneBox .noraCost {
   font-size: 1.2em;
   font-weight: bolder;
 }
-
-.RuneBox .name span, .RuneBox .noraCost span {
+.RuneBox .name span,
+.RuneBox .noraCost span {
   color: #9fbe52;
 }
-
-.RuneBox .flavorText, .RuneBox .artist, .RuneBox .runeSet {
+.RuneBox .flavorText,
+.RuneBox .artist,
+.RuneBox .runeSet {
   font-style: italic;
   font-weight: lighter;
 }
-
 .RuneBox .flavorText span {
   color: #DF6D6D;
 }
-
-.RuneBox .artist, .RuneBox .runeSet {
-  cursor: pointer;
-}
-
-.RuneBox .artist span, .RuneBox .runeSet span {
+.RuneBox .artist span,
+.RuneBox .runeSet span {
   color: #14EFFF;
 }
-
-.RuneBox .description, .RuneBox .factions, .RuneBox .rarity {
+.RuneBox .description,
+.RuneBox .factions,
+.RuneBox .rarity {
   font-size: 1.25em;
 }
-
 .RuneBox .hash {
   padding: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -ms-flex-line-pack: center;
-      align-content: center;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
   position: relative;
   width: 100%;
   height: 100%;
 }
-
 .RuneBox .hash .img-full {
   position: relative;
   width: 332px;
   height: 400px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
 }
-
 .RuneBox .hash .img-full .statSection {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
+  z-index: 10;
 }
-
 .RuneBox .hash .img-full .statSection .statBlock {
-  display: -ms-grid;
   display: grid;
   margin: 8px 10px;
 }
-
+.RuneBox .hash .img-full .statSection .statBlock img {
+  cursor: pointer;
+}
 .RuneBox .hash .image {
   position: absolute;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
 }
-
 .RuneBox .hash .stats {
   top: 402px;
 }
 
 .listOfAll .collapsedRune {
-  grid: 'name . noraCost';
+  grid: "name . noraCost";
 }
-
 .listOfAll .expandedRune {
-  grid: 'hash name hitPoints noraCost' 'hash factions factions factions ' 'hash tradeable forSale allowRanked' 'hash races classes deckLimit' 'hash cooldown . deckLimit' 'hash description description description' 'hash damage speed defense' 'hash size minRng maxRng ' 'hash abilitySets abilitySets abilitySets' 'hash startingAbilities startingAbilities startingAbilities' 'hash flavorText flavorText flavorText' 'hash artist . runeSet';
-  -ms-grid-columns: minmax(35%, 35%) 1fr 1fr 1fr;
-      grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+  grid: "hash name hitPoints noraCost" "hash factions factions factions " "hash tradeable forSale allowRanked" "hash races classes deckLimit" "hash cooldown . deckLimit" "hash description description description" "hash damage speed defense" "hash size minRng maxRng " "hash abilitySets abilitySets abilitySets" "hash startingAbilities startingAbilities startingAbilities" "hash flavorText flavorText flavorText" "hash artist . runeSet";
+  grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
-
-.listOfAll .expandedRune input[type="radio"]:checked + label .name {
+.listOfAll .expandedRune input[type=radio]:checked + label .name {
   color: yellow;
 }
-
 .listOfAll .expandedRune .hash .img-full .statSection {
   display: none;
 }
 
-.listOfConditions .collapsedRune, .listOfMechanics .collapsedRune {
-  grid: '. name .';
+.listOfConditions .collapsedRune,
+.listOfMechanics .collapsedRune {
+  grid: ". name .";
 }
-
-.listOfConditions .expandedRune, .listOfMechanics .expandedRune {
-  grid: '. name .' 'description description description' '. key .';
+.listOfConditions .expandedRune,
+.listOfMechanics .expandedRune {
+  grid: ". name ." "description description description" ". key .";
   min-height: revert;
 }
-
-.listOfConditions .key, .listOfMechanics .key {
+.listOfConditions .key,
+.listOfMechanics .key {
   display: none;
 }
 
 .listOfAbilities .collapsedRune {
-  grid: 'name . noraCost';
+  grid: "name . noraCost";
 }
-
 .listOfAbilities .expandedRune {
-  grid: ' name name icon_name icon_name' ' name name iconName iconName' 'ap_cost ap_cost cost cost' 'apCost apCost noraCost noraCost' 'short_description short_description short_description short_description' 'shortDescription  shortDescription shortDescription shortDescription' 'level level cooldown cooldown';
+  grid: " name name icon_name icon_name" " name name iconName iconName" "ap_cost ap_cost cost cost" "apCost apCost noraCost noraCost" "short_description short_description short_description short_description" "shortDescription  shortDescription shortDescription shortDescription" "level level cooldown cooldown";
   min-height: unset;
 }
-
-.listOfAbilities .ability_id, .listOfAbilities .activated, .listOfAbilities .activation_type, .listOfAbilities .asset_id, .listOfAbilities .class_name, .listOfAbilities .comments, .listOfAbilities .prerequisite_id, .listOfAbilities .long_description,
-.listOfAbilities .ranked, .listOfAbilities .resettable, .listOfAbilities .revision, .listOfAbilities .default, .listOfAbilities .activationType {
+.listOfAbilities .shortDescription {
+  width: 80%;
+  justify-self: center;
+}
+.listOfAbilities .ability_id,
+.listOfAbilities .activated,
+.listOfAbilities .activation_type,
+.listOfAbilities .asset_id,
+.listOfAbilities .class_name,
+.listOfAbilities .comments,
+.listOfAbilities .prerequisite_id,
+.listOfAbilities .long_description,
+.listOfAbilities .ranked,
+.listOfAbilities .resettable,
+.listOfAbilities .revision,
+.listOfAbilities .default,
+.listOfAbilities .activationType {
   display: none;
 }
 
 .listOfChampions .collapsedRune {
-  grid: 'name . noraCost';
+  grid: "name . noraCost";
 }
-
 .listOfChampions .expandedRune {
-  grid: 'hash name size noraCost' 'hash factions factions factions ' 'hash tradeable forSale allowRanked' 'hash races classes deckLimit' 'hash description description description' 'hash abilitySets abilitySets abilitySets' 'hash startingAbilities startingAbilities startingAbilities' 'hash artist . runeSet';
-  -ms-grid-columns: minmax(35%, 35%) 1fr 1fr 1fr;
-      grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+  grid: "hash name size noraCost" "hash factions factions factions " "hash tradeable forSale allowRanked" "hash races classes deckLimit" "hash description description description" "hash abilitySets abilitySets abilitySets" "hash startingAbilities startingAbilities startingAbilities" "hash artist . runeSet";
+  grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
-
-.listOfChampions .expandedRune input[type="radio"]:checked + label .name {
+.listOfChampions .expandedRune input[type=radio]:checked + label .name {
   color: yellow;
 }
-
+.listOfChampions .damage,
+.listOfChampions .speed,
+.listOfChampions .maxRng,
+.listOfChampions .minRng,
+.listOfChampions .defense,
+.listOfChampions .hitPoints {
+  display: none;
+}
+.listOfChampions .statBlock .damage,
+.listOfChampions .statBlock .speed,
+.listOfChampions .statBlock .maxRng,
+.listOfChampions .statBlock .minRng,
+.listOfChampions .statBlock .defense,
+.listOfChampions .statBlock .hitPoints {
+  display: unset;
+}
 .listOfChampions .description {
   width: 100%;
   margin: auto;
 }
-
 .listOfChampions .description a {
   color: #DF6D6D;
 }
-
 .listOfChampions .description a:hover {
   color: #DF6D6D;
 }
-
-.listOfChampions .abilities ul .apCost, .listOfChampions .abilities ul .shortDescription, .listOfChampions .abilities ul .cooldown, .listOfChampions .abilities ul .noraCost, .listOfChampions .abilities ul .apCost {
+.listOfChampions .abilities ul .apCost,
+.listOfChampions .abilities ul .shortDescription,
+.listOfChampions .abilities ul .cooldown,
+.listOfChampions .abilities ul .noraCost,
+.listOfChampions .abilities ul .apCost {
   display: none;
 }
-
 .listOfChampions .abilities ul:hover .apCost {
   display: inline;
 }
 
 .listOfSpells .collapsedRune {
-  grid: 'name . noraCost';
+  grid: "name . noraCost";
 }
-
 .listOfSpells .expandedRune {
-  grid: 'hash name . noraCost' 'hash factions factions factions ' 'hash tradeable forSale allowRanked' 'hash cooldown . deckLimit' 'hash description description description' 'hash flavorText flavorText flavorText' 'hash artist . runeSet';
-  -ms-grid-columns: minmax(35%, 35%) 1fr 1fr 1fr;
-      grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+  grid: "hash name . noraCost" "hash factions factions factions " "hash tradeable forSale allowRanked" "hash cooldown . deckLimit" "hash description description description" "hash flavorText flavorText flavorText" "hash artist . runeSet";
+  grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
-
 .listOfSpells .expandedRune .hash .img-full .statSection {
   display: none;
 }
 
 .listOfRelics .collapsedRune {
-  grid: 'name . noraCost';
+  grid: "name . noraCost";
 }
-
 .listOfRelics .expandedRune {
-  grid: 'hash name . noraCost' 'hash factions factions factions ' 'hash tradeable  forSale allowRanked' 'hash size hitPoints defense' 'hash description description description' 'hash flavorText flavorText flavorText' 'hash artist deckLimit runeSet';
-  -ms-grid-columns: minmax(35%, 35%) 1fr 1fr 1fr;
-      grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
+  grid: "hash name . noraCost" "hash factions factions factions " "hash tradeable  forSale allowRanked" "hash size hitPoints defense" "hash description description description" "hash flavorText flavorText flavorText" "hash artist deckLimit runeSet";
+  grid-template-columns: minmax(35%, 35%) 1fr 1fr 1fr;
 }
-
-.listOfRelics .expandedRune .hash .img-full .dmg, .listOfRelics .expandedRune .hash .img-full .spd, .listOfRelics .expandedRune .hash .img-full .rng {
+.listOfRelics .expandedRune .hash .img-full .dmg,
+.listOfRelics .expandedRune .hash .img-full .spd,
+.listOfRelics .expandedRune .hash .img-full .rng {
   display: none;
+}
+.listOfRelics .hitPoints,
+.listOfRelics .defense {
+  display: none;
+}
+.listOfRelics .statBlock .hitPoints,
+.listOfRelics .statBlock .defense {
+  display: unset;
 }
 
 .listOfEquips .collapsedRune {
-  grid: 'name . noraCost';
+  grid: "name . noraCost";
 }
-
 .listOfEquips .expandedRune {
-  grid: 'hash name noraCost' 'hash factions factions ' 'hash tradeable allowRanked' 'hash forSale deckLimit' 'hash description description' 'hash flavorText flavorText' 'hash artist runeSet';
-  -ms-grid-columns: minmax(30%, 30%) 1fr 1fr;
-      grid-template-columns: minmax(30%, 30%) 1fr 1fr;
+  grid: "hash name noraCost" "hash factions factions " "hash tradeable allowRanked" "hash forSale deckLimit" "hash description description" "hash flavorText flavorText" "hash artist runeSet";
+  grid-template-columns: minmax(30%, 30%) 1fr 1fr;
 }
-
 .listOfEquips .expandedRune .hash .img-full .statSection {
   display: none;
 }
 
 @media screen and (max-width: 1000px) {
   .App .appFooter {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    flex-direction: column;
   }
   button {
-    margin: .5em;
-    padding: .5em;
+    margin: 0.5em;
+    padding: 0.5em;
     font-size: 1.5em;
   }
   .RuneBox {
+    font-size: 14px;
     width: 100%;
   }
   .RuneBox .expandedRune {
     min-height: 1000px;
   }
-  .listOfConditions .expandedRune, .listOfMechanics .expandedRune, .listOfAbilities .expandedRune {
+  .markupAbility:hover .abilityHover .description .markupAbility:nth-child(1) .abilityHover, .markupAbility:focus .abilityHover .description .markupAbility:nth-child(1) .abilityHover {
+    left: -50%;
+    top: 0%;
+  }
+  .markupAbility:hover .abilityHover .description .markupAbility:nth-child(2) .abilityHover, .markupAbility:focus .abilityHover .description .markupAbility:nth-child(2) .abilityHover {
+    left: 0%;
+    top: 100%;
+    width: 100%;
+  }
+  .markupAbility:hover .abilityHover .description .markupAbility:nth-child(3) .abilityHover, .markupAbility:focus .abilityHover .description .markupAbility:nth-child(3) .abilityHover {
+    left: -50%;
+    top: unset;
+    bottom: 0%;
+  }
+  .markupAbility:hover .abilityHover .abilityHover, .markupAbility:focus .abilityHover .abilityHover {
+    width: 50%;
+    padding: 5px;
+  }
+  .listOfConditions .expandedRune,
+  .listOfMechanics .expandedRune,
+  .listOfAbilities .expandedRune {
     min-height: revert;
   }
   .listOfAll .expandedRune {
-    grid: ' hash hash hash' ' name hitPoints noraCost' 'factions factions factions ' 'tradeable forSale allowRanked' ' races classes deckLimit' ' cooldown . deckLimit' 'description description description' ' damage speed defense' ' size minRng maxRng ' 'abilitySets abilitySets abilitySets' 'startingAbilities startingAbilities startingAbilities' ' flavorText flavorText flavorText' 'artist . runeSet';
-    -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
-        grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+    grid: " hash hash hash" " name hitPoints noraCost" "factions factions factions " "tradeable forSale allowRanked" " races classes deckLimit" " cooldown . deckLimit" "description description description" " damage speed defense" " size minRng maxRng " "abilitySets abilitySets abilitySets" "startingAbilities startingAbilities startingAbilities" " flavorText flavorText flavorText" "artist . runeSet";
+    grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
   }
   .listOfChampions .expandedRune {
-    grid: 'hash hash hash hash' 'name  name noraCost noraCost' 'factions factions hitPoints hitPoints ' 'tradeable deckLimit forSale allowRanked' 'races races classes classes' 'description description description description' 'damage speed speed defense' 'size minRng minRng maxRng ' 'abilitySets abilitySets abilitySets abilitySets' 'startingAbilities startingAbilities startingAbilities startingAbilities' 'artist artist runeSet runeSet';
-    -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
-        grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+    grid: "hash hash hash hash" "name  name noraCost noraCost" "factions factions hitPoints hitPoints " "tradeable deckLimit forSale allowRanked" "races races classes classes" "description description description description" "damage speed speed defense" "size minRng minRng maxRng " "abilitySets abilitySets abilitySets abilitySets" "startingAbilities startingAbilities startingAbilities startingAbilities" "artist artist runeSet runeSet";
   }
   .listOfSpells .expandedRune {
-    grid: 'hash hash hash hash' 'name name noraCost noraCost' 'factions  factions factions factions ' 'tradeable forSale forSale allowRanked' 'cooldown cooldown deckLimit deckLimit' 'description  description description description' 'flavorText flavorText flavorText flavorText' 'artist artist runeSet runeSet';
-    -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
-        grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+    grid: "hash hash hash hash" "name name noraCost noraCost" "factions  factions factions factions " "tradeable forSale forSale allowRanked" "cooldown cooldown deckLimit deckLimit" "description  description description description" "flavorText flavorText flavorText flavorText" "artist artist runeSet runeSet";
+    grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
   }
   .listOfRelics .expandedRune {
-    grid: 'hash hash hash hash' 'name name noraCost noraCost' 'factions factions factions factions ' 'tradeable forSale forSale allowRanked' 'size hitPoints hitPoints defense' 'description description description description' 'flavorText flavorText flavorText flavorText' 'artist deckLimit deckLimit runeSet';
-    -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
-        grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+    grid: "hash hash hash hash" "name name noraCost noraCost" "factions factions factions factions " "tradeable forSale forSale allowRanked" "size hitPoints hitPoints defense" "description description description description" "flavorText flavorText flavorText flavorText" "artist deckLimit deckLimit runeSet";
+    grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
   }
   .listOfEquips .expandedRune {
-    grid: 'hash hash hash hash'  'name name  noraCost noraCost' 'factions factions factions factions ' 'tradeable tradeable allowRanked allowRanked' 'forSale forSale deckLimit deckLimit' 'description description description description' 'flavorText flavorText flavorText flavorText' 'artist artist runeSet runeSet';
-    -ms-grid-rows: minmax(50%, 50%) 1fr 1fr 1fr;
-        grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
+    grid: "hash hash hash hash" "name name  noraCost noraCost" "factions factions factions factions " "tradeable tradeable allowRanked allowRanked" "forSale forSale deckLimit deckLimit" "description description description description" "flavorText flavorText flavorText flavorText" "artist artist runeSet runeSet";
+    grid-template-rows: minmax(50%, 50%) 1fr 1fr 1fr;
   }
   .searchPlacement {
     padding: 1em auto;
   }
-  .searchPlacement .inputContainer input, .searchPlacement .inputContainer select {
+  .searchPlacement .inputContainer input,
+  .searchPlacement .inputContainer select {
     text-align: center;
-    -ms-flex-item-align: center;
-        -ms-grid-row-align: center;
-        align-self: center;
+    align-self: center;
     margin: 1em;
   }
-}
-/*# sourceMappingURL=App.css.map */
+}/*# sourceMappingURL=App.css.map */
