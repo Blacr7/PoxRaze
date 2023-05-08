@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/PoxRaze/static/css/main.eae1f99c.css",
-    "main.js": "/PoxRaze/static/js/main.faba3dab.js",
+    "main.css": "/PoxRaze/static/css/main.8748be96.css",
+    "main.js": "/PoxRaze/static/js/main.13056eee.js",
     "index.html": "/PoxRaze/index.html",
-    "main.eae1f99c.css.map": "/PoxRaze/static/css/main.eae1f99c.css.map",
-    "main.faba3dab.js.map": "/PoxRaze/static/js/main.faba3dab.js.map"
+    "main.8748be96.css.map": "/PoxRaze/static/css/main.8748be96.css.map",
+    "main.13056eee.js.map": "/PoxRaze/static/js/main.13056eee.js.map"
   },
   "entrypoints": [
-    "static/css/main.eae1f99c.css",
-    "static/js/main.faba3dab.js"
+    "static/css/main.8748be96.css",
+    "static/js/main.13056eee.js"
   ]
 }
