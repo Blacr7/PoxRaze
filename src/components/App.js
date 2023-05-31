@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import update from 'react-addons-update';
 import { any } from 'prop-types';
 import FlatList from 'flatlist-react';
@@ -22,8 +22,6 @@ function updateSearch(event){
     }
 }
 
-
-
 class App extends Component {
     constructor(props){
         super(props);
@@ -40,7 +38,12 @@ class App extends Component {
             listOfMechanics: [],
             //Determine what the current clicked list is
             //i.e if Relics button is clicked valueOfList: listOfRelics; and will display the list of relics
-            valueOfList: 'listOfChampions'
+            valueOfList: 'listOfChampions',
+            slide: 0,
+            prevSlide: 0,
+            toolTip: ['Click on the stat of a Rune to sort your searchs by that stat', 
+                'Click on the Icon of an ability to quick search for that ability',
+                'Click the Image of an expanded rune to collapse it']
         };
 
         //updateList = updateList.bind(this)
@@ -83,28 +86,73 @@ class App extends Component {
             listOfMechanics: mechanics,
         })
 
+        setInterval(
+            () => {
+                if(this.state.prevSlide === this.state.toolTip.length - 2){
+                    this.setState( prevState => {
+                        return {
+                            slide: 0,
+                            prevSlide: prevState.slide
+                            
+                        }
+                    })
+                }else{
+                    this.setState( prevState => {
+                        return {
+                            slide: prevState.slide + 1 ,
+                            prevSlide: prevState.slide,
+                            
+                        }
+                    })
+                }
+            }, 10000)
+        
+    }
+
+    toolTipSlides(){
+    
+        const {slide, toolTip} = this.state;
+    
+        return(
+            <div className='toolTipContainer'>
+                <div className="toolTipSlider"
+                    style={{ transform: `translate3d(${-slide * 100}%, 0, 0)` }}
+                >
+                    {toolTip.map((value, index) => {
+                        return <span className='toolTip' key={index} >{value}</span>
+                        })
+                    } 
+                </div>
+                
+                <div className='toolTipButtonContainer'>
+                    {toolTip.map((value, index) => {
+                        return <div key={index} 
+                                    className={`toolTipButton ${slide === index ? "active" : ""}`}
+                                    onClick={() => {this.setState({slide: index })}}></div>
+                    })}
+                </div>
+            </div>
+        )
     }
 
 	render() {
         // store the data of the clicked list in populatedData
-        let populatedData = this.state[this.state.valueOfList];
-        let toolTip = ['Click on the stat of a unit to sort your searchs by that stat', 'Click on the Icon of an ability to quick search for that ability' ,'Click the Image of an expanded rune to collapse it']
+        const {valueOfList, listOfAbilities, listOfMechanics, listOfConditions} = this.state;
+        let populatedData = this.state[valueOfList];
         
 		return (
 		<div className="App">
 			<header className="App-header">
                 <h1 className="App-title">PoxRaze</h1>
                 <span>The PoxNora Search Engine</span>
-                <div className='toolTipContainer'>
-                  <span className='toolTip' data-tooltip={toolTip[Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0)) + Math.ceil(0))]}>?</span>
-                </div>
                 
+                {this.toolTipSlides()}
 			</header>    
         
 			<div id='placement'>
                 {/* the displayed information will be organized into lists of runes that share similarities. */}
                 {/* currently lists can only be organized by "Name" of rune and the value of the list*/}
-                <RunesList displayListName={this.state.valueOfList} displayData={populatedData || []} abilities={[this.state.listOfAbilities, this.state.listOfMechanics, this.state.listOfConditions]}></RunesList>
+                <RunesList displayListName={valueOfList} displayData={populatedData || []} abilities={[listOfAbilities, listOfMechanics, listOfConditions]}></RunesList>
             </div>
 
             <div className='appFooter'> 
@@ -118,17 +166,28 @@ class App extends Component {
 }
 
 class ControlButtons extends Component{
+
+    constructor(props){
+        super(props);
+
+        this.state = {
+            active: [false,true,false,,,,,]
+        }
+    }
+
     render(){
+        const {displayListName} = this.props;
+
         return(
             <div className="controlButtons">
-                <button   onClick={() => updateState('listOfAll')} id="All Runes">All Runes</button>
-                <button   onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
-                <button   onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
-                <button   onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
-                <button   onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
-               	<button   onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
-                <button   onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
-                <button   onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
+                <button   className={displayListName == 'listOfAll' ? 'active' : ''} onClick={() => updateState('listOfAll')} id="All Runes">All Runes</button>
+                <button   className={displayListName == 'listOfChampions' ? 'active' : ''} onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
+                <button   className={displayListName == 'listOfSpells' ? 'active' : ''} onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
+                <button   className={displayListName == 'listOfRelics' ? 'active' : ''} onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
+                <button   className={displayListName == 'listOfEquips' ? 'active' : ''} onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
+               	<button   className={displayListName == 'listOfAbilities' ? 'active' : ''} onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
+                <button   className={displayListName == 'listOfConditions' ? 'active' : ''} onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
+                <button   className={displayListName == 'listOfMechanics' ? 'active' : ''} onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
             </div>
         )
     } 
@@ -422,8 +481,8 @@ class Runes extends Component {
 
     sortBy(event){
         this.setState({
+            toggled: !this.state.toggled,
             sortBy: event.target.className ? event.target.className : 'name',
-            toggled: !this.state.toggled
         })
     }
 
@@ -439,10 +498,10 @@ class Runes extends Component {
         let theDisplayNumber = displayNumber.current ? displayNumber.current.value : 20;
         const lastIndex = currentPage * theDisplayNumber;
         const firstIndex = lastIndex - theDisplayNumber
+        displayData.sort((a,b) => toggled ? a[sortBy] < (b[sortBy]) : b[sortBy] < (a[sortBy]));
         const currentRunes = displayData.slice(firstIndex, lastIndex);
         
-        
-        const renderRunes = (item) => {
+        const renderRune = (item) => {
             //item is an object containing all the information for a rune
             //i is the runes id, cant find the reason for that
             return <div key={item[1]} className={`RuneBox ${item[1]}`}>
@@ -502,8 +561,9 @@ class Runes extends Component {
             })}
         </ul>
 
-        currentRunes.sort((a,b) => toggled ? a[sortBy] < (b[sortBy]) : b[sortBy] < (a[sortBy]))
         
+        
+
         return <div ref='placement' className='runesPlacement' id="runesPlacement">
             {expandAll}
             {renderPageNumbers}
@@ -512,7 +572,7 @@ class Runes extends Component {
                         list={currentRunes.map((value, index) => {
                             return [value, index];
                         })}
-                        renderItem={renderRunes}
+                        renderItem={renderRune}
                         renderWhenEmpty={() => 
                             <div key={'Empty List'} className="RunesErrorMessage emptyList">
                                 <h3>No Runes Found</h3>
@@ -642,6 +702,7 @@ const findAbilityIcon = (data, size) => {
     }
     
 }
+
 class Ability extends React.Component {
     
     // props are this.props.value: the unique identifer for abilities, conditions, and mechanics, this.props.datalist: the full list of abilities, conditions, and mechanics
@@ -845,7 +906,7 @@ class RunesList extends React.Component {
             <div className="searchPlacement">
                     <div className="inputContainer">
                         {/* the various buttons that will prompt what list of runes to search through */}
-				        <ControlButtons />
+				        <ControlButtons displayListName={displayListName}/>
                         <label className="searchLabel" htmlFor="displayNumber">Runes per Page: </label>
                         <input ref={displayNumber} type="number" className="displayNumber" id="displayNumber" defaultValue="15" min="1"></input>
                     
