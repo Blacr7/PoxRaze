@@ -40,7 +40,12 @@ class App extends Component {
             listOfMechanics: [],
             //Determine what the current clicked list is
             //i.e if Relics button is clicked valueOfList: listOfRelics; and will display the list of relics
-            valueOfList: 'listOfChampions'
+            valueOfList: 'listOfChampions',
+            slide: 0,
+            prevSlide: 0,
+            toolTip: ['Type !a or !n before a search to search by only name/ability','Click on the stat of a Rune to sort your searchs by that stat', 
+                'Click on the Icon of an ability to quick search for that ability',
+                'Click the Image of an expanded rune to collapse it']
         };
 
         //updateList = updateList.bind(this)
@@ -48,7 +53,8 @@ class App extends Component {
     }
 
     componentDidMount(){
-        // Code to generate the abilities found only on champions
+        //THE ABILITY LIST HAS BEEN UPDATED TO INCLUDE THESE
+        // Code to generate the abilities found only on champions and not in the ability list
         //
         // let championAbilitySets = champs.map((value) => value.abilitySets[0].abilities.concat(value.abilitySets[1].abilities)).flat()
         // let championStartingAbilities = champs.map(value => value.startingAbilities).flat()
@@ -57,8 +63,10 @@ class App extends Component {
         //         x.id === value.id
         //     ))
         // )
+        // console.log(champAbilities, abilities)
 
-        // set all of the data imported from the APIs to their respective lists
+
+        //set all of the data imported from the APIs to their respective lists
         this.setState({
             listOfAll: equips.concat(relics, spells, champs).sort((a, b) => {
                 let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
@@ -72,38 +80,82 @@ class App extends Component {
             }),
             listOfConditions: conditions,
             listOfChampions: champs,
-            listOfAbilities: champAbilities.concat(abilities).filter((value, index, self) => 
-                index === self.findIndex(x => (
-                    value.ability_id === x.ability_id
-                ))
-            ),
+            listOfAbilities: abilities,
+            // listOfAbilities: champAbilities.concat(abilities).filter((value, index, self) => 
+            //     index === self.findIndex(x => (
+            //         value.ability_id === x.ability_id
+            //     ))
+            // ),
             listOfSpells: spells,
             listOfEquips: equips,
             listOfRelics: relics,
             listOfMechanics: mechanics,
         })
 
+        setInterval(
+            () => {
+                if(this.state.prevSlide === this.state.toolTip.length - 2){
+                    this.setState( prevState => {
+                        return {
+                            slide: 0,
+                            prevSlide: prevState.slide
+                            
+                        }
+                    })
+                }else{
+                    this.setState( prevState => {
+                        return {
+                            slide: prevState.slide + 1 ,
+                            prevSlide: prevState.slide,
+                            
+                        }
+                    })
+                }
+            }, 10000)
+
+    }
+
+    toolTipSlides(){
+    
+        const {slide, toolTip} = this.state;
+    
+        return(
+            <div className='toolTipContainer'>
+                <div className="toolTipSlider"
+                    style={{ transform: `translate3d(${-slide * 100}%, 0, 0)` }}
+                >
+                    {toolTip.map((value, index) => {
+                        return <span className='toolTip' key={index} >{value}</span>
+                        })
+                    } 
+                </div>
+                
+                <div className='toolTipButtonContainer'>
+                    {toolTip.map((value, index) => {
+                        return <div key={index} 
+                                    className={`toolTipButton ${slide === index ? "active" : ""}`}
+                                    onClick={() => {this.setState({slide: index })}}></div>
+                    })}
+                </div>
+            </div>
+        )
     }
 
 	render() {
         // store the data of the clicked list in populatedData
         let populatedData = this.state[this.state.valueOfList];
-        let toolTip = ['Click on the stat of a unit to sort your searchs by that stat', 'Click on the Icon of an ability to quick search for that ability' ,'Click the Image of an expanded rune to collapse it']
         
 		return (
 		<div className="App">
 			<header className="App-header">
                 <h1 className="App-title">PoxRaze</h1>
                 <span>The PoxNora Search Engine</span>
-                <div className='toolTipContainer'>
-                  <span className='toolTip' data-tooltip={toolTip[Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0)) + Math.ceil(0))]}>?</span>
-                </div>
+                {this.toolTipSlides()}
                 
 			</header>    
         
 			<div id='placement'>
                 {/* the displayed information will be organized into lists of runes that share similarities. */}
-                {/* currently lists can only be organized by "Name" of rune and the value of the list*/}
                 <RunesList displayListName={this.state.valueOfList} displayData={populatedData || []} abilities={[this.state.listOfAbilities, this.state.listOfMechanics, this.state.listOfConditions]}></RunesList>
             </div>
 
@@ -118,20 +170,44 @@ class App extends Component {
 }
 
 class ControlButtons extends Component{
+    constructor(props){
+        super(props);
+
+        this.state = {
+            active: [false,true,false,,,,,]
+        }
+    }
+
     render(){
+        const {displayListName} = this.props;
+
         return(
             <div className="controlButtons">
-                <button   onClick={() => updateState('listOfAll')} id="All Runes">All Runes</button>
-                <button   onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
-                <button   onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
-                <button   onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
-                <button   onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
-               	<button   onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
-                <button   onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
-                <button   onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
+                <button   className={displayListName == 'listOfAll' ? 'active' : ''} onClick={() => updateState('listOfAll')} id="All Runes">All Runes</button>
+                <button   className={displayListName == 'listOfChampions' ? 'active' : ''} onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
+                <button   className={displayListName == 'listOfSpells' ? 'active' : ''} onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
+                <button   className={displayListName == 'listOfRelics' ? 'active' : ''} onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
+                <button   className={displayListName == 'listOfEquips' ? 'active' : ''} onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
+               	<button   className={displayListName == 'listOfAbilities' ? 'active' : ''} onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
+                <button   className={displayListName == 'listOfConditions' ? 'active' : ''} onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
+                <button   className={displayListName == 'listOfMechanics' ? 'active' : ''} onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
             </div>
         )
-    } 
+    }
+    // render(){
+    //     return(
+    //         <div className="controlButtons">
+    //             <button   onClick={() => updateState('listOfAll')} id="All Runes">All Runes</button>
+    //             <button   onClick={() => updateState('listOfChampions')} id="Champions">Champions</button>
+    //             <button   onClick={() => updateState('listOfSpells')} id="Spells">Spells</button>
+    //             <button   onClick={() => updateState('listOfRelics')} id="Relics">Relics</button>
+    //             <button   onClick={() => updateState('listOfEquips')} id="Equips">Equips</button>
+    //             <button   onClick={() => updateState('listOfAbilities')} id="Abilities">Abilities</button>
+    //             <button   onClick={() => updateState('listOfConditions')} id="conditions">Conditions</button>
+    //             <button   onClick={() => updateState('listOfMechanics')} id="Mechanics">Mechanics</button>
+    //         </div>
+    //     )
+    // } 
 }
 
 class Rune extends Component{
@@ -621,12 +697,12 @@ const convertAbilityTags = (string, list, isNested) => {
 }
 
 const findAbilityIcon = (data, size) => {
-    if(data.iconName !== '' && data.iconName !== undefined && data.iconName !== null){
+    if(data.icon_name!== '' && data.icon_name !== undefined && data.icon_name !== null){
         return <img 
             className='abilityIcon' 
             src={`https://d2aao99y1mip6n.cloudfront.net/images/ability_icons/${size}/icon_${data.icon_name ? data.icon_name: data.iconName}.gif`} 
             onError={
-                //stop certain infinite onError loops from happening
+                //stop certain infinite loops from happening
                 (q) => {
                     q.onError = (w) =>{
                         q.target.src = `https://d2aao99y1mip6n.cloudfront.net/images/ability_icons/small/icon_${data.icon_name ? data.icon_name: data.iconName}.gif`}
@@ -724,7 +800,7 @@ class RunesList extends React.Component {
     }
 
     render(){
-        let filtered, filteredByStartingAbilities, filteredByName, filteredByAbilityUpgrades, filteredByDropdown, filteredByRace, advancedFilter = [];
+        let filtered, filteredByStartingAbilities, filteredByName, filteredByAbilityUpgrades, filteredByDropdown, filteredByRace, filteredById, advancedFilter = [];
         let abilityUpgrades, filteredByDescription;
 
         const {displayData, displayListName, abilities} = this.props, {search, displayNumber, faction, races, classes, rarity} = this.state
@@ -760,19 +836,18 @@ class RunesList extends React.Component {
 
             function filterData(data, state){
                 // wait for search condition of at least 3 characters
-                // if the search condition starts with an ! wait for at least 5 characters
                 if(state.length < 3){
                     return filtered = data;
-                }else if(state[0] === '!' && state.length < 5){
+                }
+                // if the search condition starts with an ! wait for at least 5 characters
+                else if(state[0] === '!' && state.length < 5){
                     return filtered = data;
                 }
-                
                 else if(state[0] === '!' && state.length >= 5 && (displayListName === 'listOfSpells' || displayListName === 'listOfRelics' || displayListName === 'listOfEquips' )){
                     advancedFilter = state.slice(2);
                     advancedSearchFilter(data, state, 'description');
                     return filtered;
                 }
-                
                 else if(state[0] === '!' && state.length >= 5 && displayListName === 'listOfAbilities'){
                     advancedFilter = state.slice(2);
                     advancedSearchFilter(data, state, 'short_description');
@@ -800,28 +875,51 @@ class RunesList extends React.Component {
                         }
                     )
                     return filtered;
-                }else{
+                }
+                else{
                     filtered = [data.filter(
                         (rune) =>{
-                            filteredByName = rune.name.toLowerCase().indexOf(state.toLowerCase()) !== -1
-                            
-                            if(rune.startingAbilities !== undefined){
-                                filteredByStartingAbilities = rune.startingAbilities.map(value => value.name.toLowerCase().indexOf(state.toLowerCase()) !== -1).filter(Boolean)
-                                
-                                abilityUpgrades = rune.abilitySets.map(innerValue => {return innerValue.abilities.map(thirdInnerValue =>{ return thirdInnerValue.name })});
-                                filteredByAbilityUpgrades = abilityUpgrades.flat().map(value => value.toLowerCase().indexOf(state.toLowerCase()) !== -1).filter(Boolean);
-                                
-                                filteredByRace = rune.races.map(value => value.toLowerCase().indexOf(state.toLowerCase()) !== -1).filter(Boolean)
+                            // filter by ID
+                            // if(Number.isInteger(state) && rune.startingAbilities !== undefined){
+                            //     filteredByStartingAbilities = rune.startingAbilities.map( startingAbility => { 
+                            //         if (startingAbility.id === state){
+                            //             return true
+                            //         }
+                            //     }).filter(Boolean);
 
-                                return filteredByName || filteredByStartingAbilities[0] || filteredByAbilityUpgrades[0] || filteredByRace[0];
-                            }else if(rune.description !== undefined){
-                                filteredByDescription = rune.description.toLowerCase().indexOf(state.toLowerCase()) !== -1;
-                                return filteredByName || filteredByDescription
-                            }else if(rune['shortDescription'] !== undefined){
-                                filteredByDescription = rune['shortDescription'].toLowerCase().indexOf(state.toLowerCase()) !== -1;
-                                return filteredByName || filteredByDescription
-                            }
-                            return filteredByName
+                            //     abilityUpgrades = rune.abilitySets.map(innerValue => {return innerValue.abilities.map(thirdInnerValue =>{ return thirdInnerValue.id })});
+                            //     filteredByAbilityUpgrades = abilityUpgrades.flat().map(value => {
+                            //         if(value === state){
+                            //             return true
+                            //         }
+                            //     }).filter(Boolean);
+                            //     console.log(abilityUpgrades)
+                            //     return filteredByStartingAbilities[0] || filteredByAbilityUpgrades[0]
+                            // }
+                            // filter by name
+                            if(!Number.isInteger(state)) {
+                                filteredByName = rune.name.toLowerCase().indexOf(state.toLowerCase()) !== -1;
+                                if(rune.startingAbilities !== undefined){
+                                    filteredByStartingAbilities = rune.startingAbilities.map(value => value.name.toLowerCase().indexOf(state.toLowerCase()) !== -1).filter(Boolean)
+                                    abilityUpgrades = rune.abilitySets.map(innerValue => {return innerValue.abilities.map(thirdInnerValue =>{ return thirdInnerValue.name })});
+                                    filteredByAbilityUpgrades = abilityUpgrades.flat().map(value => value.toLowerCase().indexOf(state.toLowerCase()) !== -1).filter(Boolean);
+                                    
+                                    filteredByRace = rune.races.map(value => value.toLowerCase().indexOf(state.toLowerCase()) !== -1).filter(Boolean)
+    
+                                    return filteredByName || filteredByStartingAbilities[0] || filteredByAbilityUpgrades[0] || filteredByRace[0];
+                                }else if(rune.description !== undefined){
+                                    filteredByDescription = rune.description.toLowerCase().indexOf(state.toLowerCase()) !== -1;
+                                    return filteredByName || filteredByDescription
+                                }else if(rune['shortDescription'] !== undefined){
+                                    filteredByDescription = rune['shortDescription'].toLowerCase().indexOf(state.toLowerCase()) !== -1;
+                                    return filteredByName || filteredByDescription
+                                }else if(rune['short_description'] !== undefined){
+                                    filteredByDescription = rune['short_description'].toLowerCase().indexOf(state.toLowerCase()) !== -1;
+                                    return filteredByName || filteredByDescription
+                                }
+                                
+                                return filteredByName
+                            }                          
                         }
                     )
                     ]
@@ -845,7 +943,7 @@ class RunesList extends React.Component {
             <div className="searchPlacement">
                     <div className="inputContainer">
                         {/* the various buttons that will prompt what list of runes to search through */}
-				        <ControlButtons />
+				        <ControlButtons displayListName={displayListName}/>
                         <label className="searchLabel" htmlFor="displayNumber">Runes per Page: </label>
                         <input ref={displayNumber} type="number" className="displayNumber" id="displayNumber" defaultValue="15" min="1"></input>
                     
